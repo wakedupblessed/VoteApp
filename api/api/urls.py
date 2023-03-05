@@ -1,21 +1,16 @@
-"""api URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+
+    path('', views.index, name='index'),
+    path('polls/', views.PollListView.as_view(), name='poll_list', ),
+    path('polls/create/', views.PollCreateView.as_view(), name='poll_create'),
+    path('polls/<int:pk>/', views.PollDetailView.as_view(), name='poll_detail'),
+    path('polls/<int:pk>/update/', views.PollUpdateView.as_view(), name='poll_update'),
+    path('polls/<int:pk>/delete/', views.PollDeleteView.as_view(), name='poll_delete'),
+    path('polls/<int:pk>/vote/', views.vote, name='vote'),
 ]
