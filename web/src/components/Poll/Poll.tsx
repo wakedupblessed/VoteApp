@@ -1,23 +1,44 @@
 import styled from "styled-components";
+import { QuestionsContainer } from "./Question";
 
 import { PollResponse } from "../../api/Polls/interfaces";
 
 export const Poll = (poll: PollResponse) => {
   return (
     <StyledPoll>
-      <StyledH3>{poll.title}</StyledH3>
+      <PollInfo>
+        <PollTitle>{poll.title}</PollTitle>
+        <PollAuthor>poll.creator</PollAuthor>
+      </PollInfo>
+      <QuestionsContainer {...poll.question} />
     </StyledPoll>
   );
 };
+const PollInfo = styled.div`
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+const PollAuthor = styled.h4`
+height: 100%;
+font-size: 15px;
+font-weight: normal;
+`;
 
 const StyledPoll = styled.div`
-  border-radius: var(--borderWidth);
+  padding: 15px;
+  font-weight: normal;
+  border-radius: 4px;
   display: flex;
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
   width: 100%;
 `;
 
-const StyledH3 = styled.h3`
+const PollTitle = styled.h3`
   margin: 0;
+  font-weight: normal;
 `;

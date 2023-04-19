@@ -1,4 +1,4 @@
-import { ApiResponse, PollResponse } from "./interfaces";
+import { ApiResponse, PollResponse, QuestionType } from "./interfaces";
 
 const FAKE_DATA: ApiResponse = {
   items: [
@@ -13,24 +13,30 @@ const FAKE_DATA: ApiResponse = {
       voters: null,
       question: [
         {
+          id: "chmonia",
           title: "dsfsfs",
+          type: QuestionType.SingleChoice,
           options: [
             {
+              id: "chmo",
               name: "Red",
               is_correct: null,
               number_of_vote: 10,
             },
             {
+              id: "chmo1",
               name: "Blue",
               is_correct: true,
               number_of_vote: 15,
             },
             {
+              id: "chmo2",
               name: "Green",
               is_correct: false,
               number_of_vote: 5,
             },
             {
+              id: "chmo3",
               name: "Yellow",
               is_correct: false,
               number_of_vote: 2,

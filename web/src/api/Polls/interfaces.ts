@@ -7,11 +7,14 @@ export interface Poll {
 }
 
 export interface Question {
+  id: string;
+  type: QuestionType;
   title: string;
   options: Option[];
 }
 
 export interface Option {
+  id: string;
   name: string;
   is_correct: boolean | null;
   number_of_vote: number;
@@ -26,4 +29,10 @@ export interface PollResponse extends Poll {
 
 export interface ApiResponse {
   items: PollResponse[];
+}
+
+export enum QuestionType {
+  SingleChoice,
+  MultipleChoice,
+  OpenAnswer
 }

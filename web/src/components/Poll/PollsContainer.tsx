@@ -31,23 +31,23 @@ export const PollsContainer = () => {
 };
 
 const PollContainer = styled.div`
-  min-height: 500px;
+
   display: flex;
   margin: 20px 0;
-  --borderWidth: 2px;
+
   background: #fff;
   position: relative;
-  border-radius: var(--borderWidth);
+  border-radius: 3px;
 
   &:after {
     content: "";
     position: absolute;
-    top: calc(-1 * var(--borderWidth));
-    left: calc(-1 * var(--borderWidth));
-    height: calc(100% + var(--borderWidth) * 2);
-    width: calc(100% + var(--borderWidth) * 2);
+    top: calc(-1 * 3px);
+    left: calc(-1 * 3px);
+    height: calc(100% + 3px * 2);
+    width: calc(100% + 3px * 2);
     background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    border-radius: calc(2 * var(--borderWidth));
+    border-radius: calc(2 * 3px);
     z-index: -1;
     animation: ${gradientAnimation} 15s ease infinite;
     background-size: 400% 400%;
