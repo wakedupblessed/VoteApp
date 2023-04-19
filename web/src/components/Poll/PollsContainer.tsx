@@ -23,7 +23,7 @@ export const PollsContainer = () => {
 
   const renderPollItems = () => {
     return polls?.map((item) => {
-      return <Poll {...item}></Poll>;
+      return <Poll key={item.id} {...item}></Poll>;
     });
   };
 
@@ -31,7 +31,6 @@ export const PollsContainer = () => {
 };
 
 const PollContainer = styled.div`
-
   display: flex;
   margin: 20px 0;
 

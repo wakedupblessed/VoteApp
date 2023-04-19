@@ -10,10 +10,11 @@ export const Poll = (poll: PollResponse) => {
         <PollTitle>{poll.title}</PollTitle>
         <PollAuthor>poll.creator</PollAuthor>
       </PollInfo>
-      <QuestionsContainer {...poll.question} />
+      <QuestionsContainer questions={poll.question} />
     </StyledPoll>
   );
 };
+
 const PollInfo = styled.div`
   width: 100%;
   height: fit-content;
@@ -23,9 +24,9 @@ const PollInfo = styled.div`
   justify-content: space-between;
 `;
 const PollAuthor = styled.h4`
-height: 100%;
-font-size: 15px;
-font-weight: normal;
+  height: 100%;
+  font-size: 15px;
+  font-weight: normal;
 `;
 
 const StyledPoll = styled.div`

@@ -2,13 +2,17 @@ import styled from "styled-components";
 import { Question, QuestionType } from "../../api/Polls/interfaces";
 import { ReactNode } from "react";
 
-export const QuestionsContainer = (questions: Question[]) => {
+interface IQuestionsContainer {
+  questions: Question[];
+}
+
+export const QuestionsContainer = (props: IQuestionsContainer) => {
   const renderQuestion = (question: Question) => {
-    let QuestionComponent;
-  
+    let QuestionComponent: React.ComponentType<CustomQuestionProps>;
+
     switch (question.type) {
       case QuestionType.SingleChoice:
-        QuestionComponent = OneChoiceQuestion;
+        QuestionComponent = SingleChoiceQuestion;
         break;
       case QuestionType.MultipleChoice:
         QuestionComponent = MultipleChoiceQuestion;
@@ -19,45 +23,51 @@ export const QuestionsContainer = (questions: Question[]) => {
       default:
         return null;
     }
-  
+
     return (
-      <QuestionComponent id={question.id}>
-        {question.title}
-      </QuestionComponent>
+      <QuestionComponent key={question.id}>{question.title}</QuestionComponent>
     );
   };
 
-  return <QuestionContainerStyled>{questions.map(renderQuestion)}</QuestionContainerStyled>;
+  return (
+    <QuestionContainerStyled>
+      {props.questions.map(renderQuestion)}
+    </QuestionContainerStyled>
+  );
 };
 
 interface CustomQuestionProps {
-  id: string;
+  key: string;
   children: ReactNode;
 }
 
-const OpenAnswerQuestion = ({id, children}: CustomQuestionProps) => {
-  return <OpenAnswerQuestionStyled id={id}>{children}</OpenAnswerQuestionStyled>;
+const OpenAnswerQuestion = (props: CustomQuestionProps) => {
+  return <OpenAnswerQuestionStyled>{props.children}</OpenAnswerQuestionStyled>;
 };
 
 const OpenAnswerQuestionStyled = styled.div``;
 
-const MultipleChoiceQuestion = ({id, children}: CustomQuestionProps) => {
-  return <MultipleChoiceQuestionStyled id={id}>{children}</MultipleChoiceQuestionStyled>;
+const MultipleChoiceQuestion = (props: CustomQuestionProps) => {
+  return (
+    <MultipleChoiceQuestionStyled>
+      {props.children}
+    </MultipleChoiceQuestionStyled>
+  );
 };
-
-const OneChoiceQuestion = ({id, children}: CustomQuestionProps) => {
-  return <OneChoiceQuestionStyled id={id}>{children}</OneChoiceQuestionStyled>;
-};
-
-const OneChoiceQuestionStyled = styled.div``;
 
 const MultipleChoiceQuestionStyled = styled.div``;
 
-const QuestionContainer = styled.div`
+const SingleChoiceQuestion = (props: CustomQuestionProps) => {
+  return (
+    <SingleChoiceQuestionStyled>
+      {props.children}
+      <input type='text' />
+    </SingleChoiceQuestionStyled>
+  );
+};
 
-`;
+const SingleChoiceQuestionStyled = styled.div``;
 
+const QuestionContainer = styled.div``;
 
-const QuestionContainerStyled = styled.div`
-
-`;
+const QuestionContainerStyled = styled.div``;

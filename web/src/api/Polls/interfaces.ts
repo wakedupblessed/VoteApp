@@ -34,5 +34,5 @@ export interface ApiResponse {
 export enum QuestionType {
   SingleChoice,
   MultipleChoice,
-  OpenAnswer
+  OpenAnswer,
 }
