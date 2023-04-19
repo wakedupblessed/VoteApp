@@ -1,6 +1,7 @@
 import GlobalStyles from "./components/GlobalStyles";
 import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
+import { Poll } from "./components/Poll/Poll"
 import styled from "styled-components";
 
 export default function App() {
@@ -10,7 +11,7 @@ export default function App() {
       <PageContainer>
         <Header />
         <PageContent>
-
+        <Poll />
         </PageContent>
         <Footer />
       </PageContainer>
@@ -27,4 +28,5 @@ const PageContainer = styled.div`
 
 const PageContent = styled.div`
   flex: 1;
+  padding: 0 150px;
 `;

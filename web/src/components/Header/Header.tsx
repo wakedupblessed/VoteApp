@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import HeaderLink, { HeaderLinkStyle } from "../HeaderLink/Link";
+import HeaderLink, { HeaderLinkStyle } from "../HeaderLink/HeaderLink";
 
 
 
@@ -27,7 +27,7 @@ const HeaderArea = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 40px;
+  padding: 0 150px;
   height: 100px;
 
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
@@ -49,11 +49,9 @@ const HeaderArea = styled.header`
 const NavLinkContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: ;
 `;
 
 const NavAccountLinks = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: ;
 `;
