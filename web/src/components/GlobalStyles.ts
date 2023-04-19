@@ -2,12 +2,17 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   * {
-    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
   }
 
   html, body {
-    font-family: sans-serif;
     margin: 0;
+    height: 100%;
+  }
+
+  p, h1, h2, h3 {
+    padding: 0;
+    marging: 0;
   }
 `;
 
