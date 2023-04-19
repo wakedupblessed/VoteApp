@@ -1,27 +1,47 @@
 import styled from "styled-components";
-import HeaderLink, { HeaderLinkStyle } from "../HeaderLink/HeaderLink";
 
-
+import HeaderLink from "../HeaderLink/HeaderLink";
+import { gradientAnimation } from "../GlobalStyles";
 
 export const Header = () => {
   return (
     <HeaderArea>
       <NavLinkContainer>
-        <HeaderLogo/>
-        <HeaderLink label='Home' onClick={() => {alert("work 1")}} />
-        <HeaderLink label='Polls' onClick={() => {alert("work 2")}} />
+        <HeaderLogo />
+        <HeaderLink
+          label='Home'
+          onClick={() => {
+            alert("work 1");
+          }}
+        />
+        <HeaderLink
+          label='Polls'
+          onClick={() => {
+            alert("work 2");
+          }}
+        />
       </NavLinkContainer>
       <NavAccountLinks>
-        <HeaderLink label='Log in' onClick={() => {alert("log in")}} />
-        <HeaderLink label='Sign up' onClick={() => {alert("sign up")}} />
+        <HeaderLink
+          label='Log in'
+          onClick={() => {
+            alert("log in");
+          }}
+        />
+        <HeaderLink
+          label='Sign up'
+          onClick={() => {
+            alert("sign up");
+          }}
+        />
       </NavAccountLinks>
     </HeaderArea>
   );
 };
 
 const HeaderLogo = styled.img`
-  src: url()
-`
+  src: url();
+`;
 
 const HeaderArea = styled.header`
   display: flex;
@@ -31,19 +51,8 @@ const HeaderArea = styled.header`
   height: 100px;
 
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
+  background-size: 400% 400%;
+  animation: ${gradientAnimation} 15s ease infinite;
 `;
 
 const NavLinkContainer = styled.div`
