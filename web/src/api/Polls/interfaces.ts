@@ -1,34 +1,41 @@
-export interface Poll {
+export interface IPoll {
+  id: string;
   title: string;
+  author: string;
   description: string;
+  numberOfVote: number;
+  creationDate: Date;
+  endDate: Date;
   is_anonymous: boolean;
-  tags: null;
-  question: Question[];
+  responders: null;
+  question: IQuestion[];
 }
 
-export interface Question {
+export interface IPrivatePoll extends IPoll {
+  poll: IPoll;
+  pollees: null;
+}
+
+export interface IQuestion {
   id: string;
   type: QuestionType;
   title: string;
-  options: Option[];
+  options: IOption[];
 }
 
-export interface Option {
+export interface IOption {
   id: string;
-  name: string;
-  is_correct: boolean | null;
-  number_of_vote: number;
+  title: string;
 }
-
-export interface PollResponse extends Poll {
-  id: string;
-  number_of_vote: number;
-  creation_date: Date;
-  voters: null;
+export interface IAnswer {
+  userId: string;
+  questionId: string;
+  selectedOptions: IOption[] | null;
+  openAnswer: string;
 }
 
 export interface ApiResponse {
-  items: PollResponse[];
+  items: IPoll[];
 }
 
 export enum QuestionType {
@@ -36,3 +43,4 @@ export enum QuestionType {
   MultipleChoice,
   OpenAnswer,
 }
+
