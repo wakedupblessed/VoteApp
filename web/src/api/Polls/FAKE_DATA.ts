@@ -5,18 +5,19 @@ const FAKE_DATA: ApiResponse = {
     {
       id: "1",
       title: "Long poll title 111111111111",
-      description: "poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description ",
+      description:
+        "poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description ",
       author: "poll author",
       isAnonymous: false,
       numberOfVote: 5,
       creationDate: new Date(""),
-      endDate:new Date(""),
+      endDate: new Date(""),
       responders: null,
       question: [
         {
           id: "chmonia",
           title: "Question title long 22222222222222",
-          type: QuestionType.SingleChoice,
+          type: QuestionType.OpenAnswer,
           options: [
             {
               id: "chmo",
@@ -35,10 +36,10 @@ const FAKE_DATA: ApiResponse = {
         {
           id: "favfruit",
           title: "What is your favorite fruit?",
-          type: QuestionType.MultipleChoice,
+          type: QuestionType.SingleChoice,
           options: [
             {
-              id: "apple",
+              id: "apple-id",
               title: "Apple",
             },
             {
@@ -52,8 +53,8 @@ const FAKE_DATA: ApiResponse = {
             {
               id: "strawberry",
               title: "Strawberry",
-            }
-          ]
+            },
+          ],
         },
       ],
     },
@@ -88,13 +89,13 @@ const FAKE_DATA: ApiResponse = {
             {
               id: "other",
               title: "Other",
-            }
+            },
           ],
         },
         {
           id: "programming",
           title: "What programming languages do you know?",
-          type: QuestionType.MultipleChoice,
+          type: QuestionType.SingleChoice,
           options: [
             {
               id: "python",
@@ -119,10 +120,10 @@ const FAKE_DATA: ApiResponse = {
             {
               id: "other",
               title: "Other",
-            }
-          ]
+            },
+          ],
         },
-      ]
+      ],
     },
   ],
 };

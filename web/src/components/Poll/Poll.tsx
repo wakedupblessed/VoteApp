@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { QuestionsContainer } from "./Question";
+import { QuestionsContainer } from "../Questions/QuestionsContainer";
 
 import { IPoll } from "../../api/Polls/interfaces";
 
@@ -23,6 +23,7 @@ const PollInfo = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
 const PollAuthor = styled.h4`
   height: fit-content;
   font-size: 15px;

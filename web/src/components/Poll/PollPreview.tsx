@@ -1,10 +1,15 @@
 import styled from "styled-components";
-import { QuestionsContainer } from "./Question";
-import { gradientAnimation } from "../GlobalStyles";
+import { format, isValid } from "date-fns";
 
+import { gradientAnimation } from "../GlobalStyles";
 import { IPoll } from "../../api/Polls/interfaces";
 
 export const PollPreview = (poll: IPoll) => {
+  // for home page
+
+  const dateToString = (date: Date) =>
+    isValid(date) ? format(date, "d.M.y H:mm") : "";
+
   return (
     <StyledPollPreview>
       <PollPreviewInfo>
@@ -20,7 +25,7 @@ export const PollPreview = (poll: IPoll) => {
             <p>
               Avalible:
               <br />
-              {dateToString(poll.creationDate)} - {dateToString(poll.endDate)}{" "}
+              {dateToString(poll.creationDate)} - {dateToString(poll.endDate)}
             </p>
           </PollDetailsColumn>
           <PollDetailsColumn>
@@ -33,30 +38,12 @@ export const PollPreview = (poll: IPoll) => {
   );
 };
 
-function dateToString(date: Date) {
-  // get the year, month, date, hours, and minutes seprately and append to the string.
-  let date_String =
-    date.getDate() +
-    "." +
-    (date.getMonth() + 1) +
-    "." +
-    +date.getFullYear() +
-    " " +
-    +date.getHours() +
-    ":" +
-    +date.getMinutes();
-  return date_String.includes("NaN") ? "invalid date" : date_String;
-}
-
-const PollDetailsColumn = styled.div`
-width: calc(100% - 100px);
-height: calc(100% - 100px);
-`;
+const PollDetailsColumn = styled.div``;
 
 const SyledPollDetails = styled.div`
   display: flex;
   flex-direction: row;
-  
+
   gap: 10px;
   padding-top: 2px;
   padding-left: 30px;
@@ -87,6 +74,7 @@ const PollPreviewInfo = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
 const PollPreviewAuthor = styled.h4`
   font-size: 17px;
   font-weight: normal;
