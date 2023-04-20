@@ -1,4 +1,4 @@
-import { Poll, Question, Option } from "./interfaces";
+import { IPoll, IQuestion, IOption } from "./interfaces";
 import FAKE_DATA from "./FAKE_DATA";
 
 export class PollApi {

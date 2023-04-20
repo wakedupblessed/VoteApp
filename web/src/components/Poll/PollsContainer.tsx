@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { gradientAnimation } from "../GlobalStyles";
-import { PollResponse } from "../../api/Polls/interfaces";
+import { ApiResponse, IPoll } from "../../api/Polls/interfaces";
 import { PollApi } from "../../api/Polls/api";
 import { Poll } from "./Poll";
 
 export const PollsContainer = () => {
-  const [polls, setPolls] = useState<PollResponse[] | null>(null);
+  const [polls, setPolls] = useState<IPoll[] | null>(null);
 
   async function getResponse() {
     const result = await PollApi.getAll(true);

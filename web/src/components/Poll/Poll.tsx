@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { QuestionsContainer } from "./Question";
 
-import { PollResponse } from "../../api/Polls/interfaces";
+import { IPoll } from "../../api/Polls/interfaces";
 
-export const Poll = (poll: PollResponse) => {
+export const Poll = (poll: IPoll) => {
   return (
     <StyledPoll>
       <PollInfo>

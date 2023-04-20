@@ -10,7 +10,7 @@ const GlobalStyles = createGlobalStyle`
     height: 100%;
   }
 
-  p, h1, h2, h3 {
+  p, h1, h2, h3, h4 {
     padding: 0;
     margin: 0;
   }

@@ -5,9 +5,9 @@ const FAKE_DATA: ApiResponse = {
     {
       id: "1",
       title: "Long poll title 111111111111",
-      description: "poll description",
+      description: "poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description ",
       author: "poll author",
-      is_anonymous: false,
+      isAnonymous: false,
       numberOfVote: 5,
       creationDate: new Date(""),
       endDate:new Date(""),
@@ -56,6 +56,73 @@ const FAKE_DATA: ApiResponse = {
           ]
         },
       ],
+    },
+    {
+      id: "2",
+      title: "Short poll title",
+      description: "a brief poll description",
+      author: "John Smith",
+      isAnonymous: true,
+      numberOfVote: 0,
+      creationDate: new Date(),
+      endDate: new Date(),
+      responders: null,
+      question: [
+        {
+          id: "gender",
+          title: "What is your gender?",
+          type: QuestionType.SingleChoice,
+          options: [
+            {
+              id: "male",
+              title: "Male",
+            },
+            {
+              id: "female",
+              title: "Female",
+            },
+            {
+              id: "nonbinary",
+              title: "Non-binary",
+            },
+            {
+              id: "other",
+              title: "Other",
+            }
+          ],
+        },
+        {
+          id: "programming",
+          title: "What programming languages do you know?",
+          type: QuestionType.MultipleChoice,
+          options: [
+            {
+              id: "python",
+              title: "Python",
+            },
+            {
+              id: "java",
+              title: "Java",
+            },
+            {
+              id: "javascript",
+              title: "JavaScript",
+            },
+            {
+              id: "c++",
+              title: "C++",
+            },
+            {
+              id: "ruby",
+              title: "Ruby",
+            },
+            {
+              id: "other",
+              title: "Other",
+            }
+          ]
+        },
+      ]
     },
   ],
 };

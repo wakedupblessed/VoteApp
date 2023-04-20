@@ -17,6 +17,7 @@ export const Footer = () => {
 };
 
 const FooterArea = styled.footer`
+  margin-top:18px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

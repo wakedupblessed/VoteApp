@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import { Question, QuestionType, Option } from "../../api/Polls/interfaces";
+import { IQuestion, QuestionType, IOption } from "../../api/Polls/interfaces";
 import { ReactNode, useState } from "react";
 
 interface IQuestionsContainer {
-  questions: Question[];
+  questions: IQuestion[];
 }
 
 interface CustomQuestionProps {
   key: string;
-  data: Question;
+  data: IQuestion;
   index: number;
 }
 
@@ -19,7 +19,7 @@ interface BaseQuestionProps {
 }
 
 export const QuestionsContainer = (props: IQuestionsContainer) => {
-  const renderQuestion = (question: Question, index: number) => {
+  const renderQuestion = (question: IQuestion, index: number) => {
     let QuestionComponent: React.ComponentType<CustomQuestionProps>;
 
     switch (question.type) {
@@ -126,7 +126,6 @@ const SingleChoiceQuestion = (props: CustomQuestionProps) => {
 };
 
 const SingleOptionStyled = styled.input`
-  type: "radio";
 `;
 
 const QuestionTitleStyled = styled.p``;

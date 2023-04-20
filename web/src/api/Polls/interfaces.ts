@@ -6,7 +6,7 @@ export interface IPoll {
   numberOfVote: number;
   creationDate: Date;
   endDate: Date;
-  is_anonymous: boolean;
+  isAnonymous: boolean;
   responders: null;
   question: IQuestion[];
 }
