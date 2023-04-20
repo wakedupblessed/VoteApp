@@ -24,12 +24,14 @@ const PollInfo = styled.div`
   justify-content: space-between;
 `;
 const PollAuthor = styled.h4`
-  height: 100%;
+  height: fit-content;
   font-size: 15px;
   font-weight: normal;
 `;
 
 const StyledPoll = styled.div`
+  display: flex;
+  flex-direction: column;
   padding: 15px;
   font-weight: normal;
   border-radius: 4px;

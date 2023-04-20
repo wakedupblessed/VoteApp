@@ -1,13 +1,25 @@
 import styled from "styled-components";
-import { Question, QuestionType } from "../../api/Polls/interfaces";
-import { ReactNode } from "react";
+import { Question, QuestionType, Option } from "../../api/Polls/interfaces";
+import { ReactNode, useState } from "react";
 
 interface IQuestionsContainer {
   questions: Question[];
 }
 
+interface CustomQuestionProps {
+  key: string;
+  data: Question;
+  index: number;
+}
+
+interface BaseQuestionProps {
+  title: string;
+  index: number;
+  children: ReactNode;
+}
+
 export const QuestionsContainer = (props: IQuestionsContainer) => {
-  const renderQuestion = (question: Question) => {
+  const renderQuestion = (question: Question, index: number) => {
     let QuestionComponent: React.ComponentType<CustomQuestionProps>;
 
     switch (question.type) {
@@ -25,7 +37,7 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
     }
 
     return (
-      <QuestionComponent key={question.id}>{question.title}</QuestionComponent>
+      <QuestionComponent key={question.id} data={question} index={index + 1} />
     );
   };
 
@@ -36,13 +48,27 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
   );
 };
 
-interface CustomQuestionProps {
-  key: string;
-  children: ReactNode;
-}
+export const BaseQuestion: React.FC<BaseQuestionProps> = ({
+  title,
+  index,
+  children,
+}) => (
+  <>
+    <QuestionTitleStyled>
+      {index}. {title}
+    </QuestionTitleStyled>
+    {children}
+  </>
+);
 
 const OpenAnswerQuestion = (props: CustomQuestionProps) => {
-  return <OpenAnswerQuestionStyled>{props.children}</OpenAnswerQuestionStyled>;
+  return (
+    <OpenAnswerQuestionStyled>
+      <BaseQuestion index={props.index} title={props.data.title}>
+
+      </BaseQuestion>
+    </OpenAnswerQuestionStyled>
+  );
 };
 
 const OpenAnswerQuestionStyled = styled.div``;
@@ -50,7 +76,9 @@ const OpenAnswerQuestionStyled = styled.div``;
 const MultipleChoiceQuestion = (props: CustomQuestionProps) => {
   return (
     <MultipleChoiceQuestionStyled>
-      {props.children}
+      <BaseQuestion index={props.index} title={props.data.title}>
+
+      </BaseQuestion>
     </MultipleChoiceQuestionStyled>
   );
 };
@@ -58,16 +86,53 @@ const MultipleChoiceQuestion = (props: CustomQuestionProps) => {
 const MultipleChoiceQuestionStyled = styled.div``;
 
 const SingleChoiceQuestion = (props: CustomQuestionProps) => {
+  const [values, setValues] = useState({ gender: "" });
+  const genders = ["male", "female", "other"];
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(`Gender: ${values.gender}`);
+  }
+
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setValues({ ...values, [name]: value });
+  }
   return (
     <SingleChoiceQuestionStyled>
-      {props.children}
-      <input type='text' />
+      <BaseQuestion index={props.index} title={props.data.title}>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="gender">Gender:</label>
+            {genders.map((option) => (
+              <label key={option}>
+                <input
+                  type="radio"
+                  name="gender"
+                  value={option}
+                  checked={values.gender === option}
+                  onChange={handleRadioChange}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
+
+          <button type="submit">Submit</button>
+        </form>
+      </BaseQuestion>
     </SingleChoiceQuestionStyled>
   );
 };
 
+const SingleOptionStyled = styled.input`
+  type: "radio";
+`;
+
+const QuestionTitleStyled = styled.p``;
+
 const SingleChoiceQuestionStyled = styled.div``;
 
-const QuestionContainer = styled.div``;
-
-const QuestionContainerStyled = styled.div``;
+const QuestionContainerStyled = styled.div`
+  padding: 5px 15px;
+`;

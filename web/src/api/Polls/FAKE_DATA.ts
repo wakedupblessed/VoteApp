@@ -4,7 +4,7 @@ const FAKE_DATA: ApiResponse = {
   items: [
     {
       id: "1",
-      title: "What's your favorite color?",
+      title: "Long poll title 111111111111",
       description: "Choose your favorite color from the options below.",
       is_anonymous: false,
       tags: null,
@@ -14,7 +14,7 @@ const FAKE_DATA: ApiResponse = {
       question: [
         {
           id: "chmonia",
-          title: "dsfsfs",
+          title: "Question title long 22222222222222",
           type: QuestionType.SingleChoice,
           options: [
             {
