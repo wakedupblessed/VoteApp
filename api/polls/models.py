@@ -1,56 +1,49 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
+from enum import Enum
 
 
 class Poll(models.Model):
     title = models.CharField(max_length=50)
+    author = models.ForeignKey(User, on_delete=models.RESTRICT)
     description = models.CharField(max_length=300)
     number_of_vote = models.IntegerField(default=0)
-    creation_date = models.DateTimeField()
+    creation_date = models.DateTimeField(default=datetime.today())
     is_anonymous = models.BooleanField(default=False)
+    end_date = models.DateTimeField(default=datetime.today()+timedelta(days=1))
 
-    voters = models.ManyToManyField(User, through='PollVoter')
-    tags = models.ManyToManyField('polls.Tag', through='PollTag')
-
-    def __str__(self):
-        return f'{self.id} - {self.title}'
+    responders = models.ManyToManyField(User)
 
 
-class PollVoter(models.Model):
-    poll = models.ForeignKey(Poll, on_delete=models.RESTRICT)
-    voter = models.ForeignKey(User, on_delete=models.RESTRICT)
+class PrivatePoll(models.Model):
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    pollees = models.ManyToManyField(User)
+
+
+class QuestionType(Enum):
+    SINGLE_OPTION = 'SingleChoice',
+    MULTIPLE_OPTION = 'MultipleChoice',
+    OPEN_ANSWER = 'OpenAnswer'
 
 
 class Question(models.Model):
-    name = models.CharField(max_length=80)
-
+    title = models.CharField(max_length=80)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.id} - {self.name}'
+    question_type = models.CharField(
+        max_length=50,
+        choices=[(QuestionType.value, QuestionType.name) for type in QuestionType],
+        default=QuestionType.SINGLE_OPTION.value,
+    )
 
 
 class Option(models.Model):
-    name = models.CharField(max_length=40)
-    number_of_vote = models.IntegerField(default=0)
-    is_correct = models.BooleanField(default=False)
-
+    title = models.CharField(max_length=40)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f'{self.id} - {self.name}'
 
-
-class Tag(models.Model):
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return f'{self.id} - {self.name}'
-
-
-class PollTag(models.Model):
-    poll = models.ForeignKey(Poll, on_delete=models.RESTRICT)
-    tag = models.ForeignKey(Tag, on_delete=models.RESTRICT)
-
-
-
+class Answer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    selected_options = models.ManyToManyField(Option, blank=True)
+    open_answer = models.TextField(blank=True, null=True)
