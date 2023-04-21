@@ -7,7 +7,6 @@ export const Header = () => {
   return (
     <HeaderArea>
       <NavLinkContainer>
-        <HeaderLogo />
         <HeaderLink
           label='Home'
           onClick={() => {
@@ -38,10 +37,6 @@ export const Header = () => {
     </HeaderArea>
   );
 };
-
-const HeaderLogo = styled.img`
-  src: url();
-`;
 
 const HeaderArea = styled.header`
   display: flex;

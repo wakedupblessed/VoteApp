@@ -1,4 +1,4 @@
-import GlobalStyles from "./components/GlobalStyles";
+import GlobalStyles, {StyledHr} from "./components/GlobalStyles";
 import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
 import { Poll } from "./components/Poll/Poll";
@@ -13,6 +13,7 @@ export default function App() {
       <PageContainer>
         <Header />
         <PageContent>
+          {/* <StyledHr /> */}
           {/* <PollsContainer /> */}
           <PollsPreviewContainer />
         </PageContent>

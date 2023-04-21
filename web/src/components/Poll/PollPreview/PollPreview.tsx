@@ -1,101 +1,47 @@
 import styled from "styled-components";
 import { format, isValid } from "date-fns";
 
-import { gradientAnimation } from "../../GlobalStyles";
+import { gradientAnimation, StyleValues } from "../../GlobalStyles";
 import { IPoll } from "../../../api/Polls/interfaces";
 
 export const PollPreview = (poll: IPoll) => {
   // for home page
 
-  const dateToString = (date: Date) =>
-    isValid(date) ? format(date, "d.M.y H:mm") : "";
+  const dateToString = (startDate: Date, endDate: Date) =>
+    isValid(startDate) && isValid(endDate) ? `${format(startDate, "d.M.y H:mm")} - ${format(endDate, "d.M.y H:mm")}` : "deadline not set";
 
   return (
     <StyledPollPreview>
-      <PollPreviewInfo>
-        <PollPreviewTitle>{poll.title}</PollPreviewTitle>
-        <PollPreviewAuthor>{poll.author}</PollPreviewAuthor>
-      </PollPreviewInfo>
+      <div>
+        <PollPreviewHeader><p>{poll.title}</p><p>{poll.author}</p></PollPreviewHeader>
+      </div>
       <StyledDetails>
-        <StyledSummary>poll's details</StyledSummary>
-
-        <StyledParagraph>{poll.description}</StyledParagraph>
+        <summary>poll's details</summary>
+        <p>{poll.description}</p>
         <SyledPollDetails>
-          <PollDetailsColumn>
-            <p>
-              Avalible:
-              <br />
-              {dateToString(poll.creationDate)} - {dateToString(poll.endDate)}
-            </p>
-          </PollDetailsColumn>
-          <PollDetailsColumn>
+          <div><p>Avalible:<br />{dateToString(poll.creationDate, poll.endDate)}</p></div>
+          <div>
             <p>{poll.numberOfVote} answers</p>
             <p>type: {poll.isAnonymous ? "anonymous" : "not anonymous"}</p>
-          </PollDetailsColumn>
+          </div>
         </SyledPollDetails>
       </StyledDetails>
     </StyledPollPreview>
   );
 };
 
-const PollDetailsColumn = styled.div``;
-
-const SyledPollDetails = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  gap: 10px;
-  padding-top: 2px;
-  padding-left: 30px;
-  font-size: 15px;
-`;
-
-const StyledDetails = styled.details`
-  padding: 5px 0 0 15px;
-`;
-
-const StyledSummary = styled.summary`
-  padding-top: 10px;
-  font-size: 17px;
-`;
-
-const StyledParagraph = styled.p`
-  padding-top: 5px;
-  padding-left: 30px;
-  font-size: 15px;
-
-  margin: 5px;
-`;
-
-const PollPreviewInfo = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const PollPreviewAuthor = styled.h4`
-  font-size: 17px;
-  font-weight: normal;
-`;
-
 const StyledPollPreview = styled.div`
-  margin: 3px;
+  width: calc(100% - 35px);
   height: fit-content;
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: 20px;
   font-weight: normal;
+  font-size: ${StyleValues.commonFontWeight};
   border-radius: 4px;
   display: flex;
   background-color: #fff;
   color: #000;
-
-  flex-basis: calc(50% - 10px);
-  margin: 5px; 
-
-  background: #fff;
   position: relative;
   border-radius: 3px;
   margin-top: 21px;
@@ -115,7 +61,31 @@ const StyledPollPreview = styled.div`
   }
 `;
 
-const PollPreviewTitle = styled.h3`
-  margin: 0;
-  font-weight: normal;
+const PollPreviewHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  & > p:first-child {
+    font-weight: bold;
+  }
+`;
+
+const SyledPollDetails = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding-top: 5px;
+  padding-left: 30px;
+  font-size: ${StyleValues.smallFontWeight};
+
+  & > div {
+    width: calc(100% / 2 - 5px);
+  }
+`;
+
+const StyledDetails = styled.details`
+  padding: 5px 10px 0 15px;
+  font-size: ${StyleValues.smallFontWeight};
+  & > p{
+    padding-left: 30px;
+  }
 `;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { gradientAnimation } from "../../GlobalStyles";
+import { gradientAnimation, StyledHr } from "../../GlobalStyles";
 import { IPoll } from "../../../api/Polls/interfaces";
 import { PollApi } from "../../../api/Polls/api";
 import { Poll } from "../Poll";
@@ -24,7 +24,11 @@ export const PollsPreviewContainer = () => {
 
   const renderPollItems = () => {
     return polls?.map((item) => {
-      return <PollPreview key={item.id} {...item}></PollPreview>;
+      return (
+        <>
+        <PollPreview key={item.id} {...item}></PollPreview>
+        </>
+      );
     });
   };
 
@@ -35,9 +39,6 @@ const PollPreviewContainer = styled.div`
   margin-top: 20px;
   position: relative;
   left: 3px;
-  width: calc(100% - 3px * 2);
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  
+  flex-direction: column;
 `;
