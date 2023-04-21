@@ -62,11 +62,23 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
       <QuestionContainerStyled>
         {props.questions.map(renderQuestion)}
       </QuestionContainerStyled>
-      <button type='submit'>Send answers</button>
+      <StyledSubmitButton type='submit'>Send answers</StyledSubmitButton>
     </form>
   );
 };
 
+const StyledSubmitButton = styled.button`
+  margin: 10px 0 0 15px;
+    padding: 12px 20px;
+    border-radius: 40px;
+    font-size: 13px;
+    color: #fff;
+    font-weight: normal;
+    background-color: #000;
+    line-height: 16px;
+    border: none;
+`;
+
 const QuestionContainerStyled = styled.div`
-  padding: 5px 15px;
+  padding: 0px 15px;
 `;

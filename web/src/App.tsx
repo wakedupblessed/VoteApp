@@ -14,7 +14,7 @@ export default function App() {
         <Header />
         <PageContent>
           {/* <StyledHr /> */}
-          {/* <PollsContainer /> */}
+          <PollsContainer />
           <PollsPreviewContainer />
         </PageContent>
         <Footer />

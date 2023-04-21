@@ -17,7 +17,7 @@ const SingleChoiceQuestion = (props: CustomQuestionProps) => {
   return (
     <SingleChoiceQuestionStyled>
       <BaseQuestion index={props.index} title={props.data.title}>
-        <div>
+        <CoicesContainer>
           {props.data.options.map((option) => (
             <label key={option.id}>
               <input
@@ -30,7 +30,7 @@ const SingleChoiceQuestion = (props: CustomQuestionProps) => {
               {option.title}
             </label>
           ))}
-        </div>
+        </CoicesContainer>
       </BaseQuestion>
     </SingleChoiceQuestionStyled>
   );
@@ -38,4 +38,14 @@ const SingleChoiceQuestion = (props: CustomQuestionProps) => {
 
 export default SingleChoiceQuestion;
 
-const SingleChoiceQuestionStyled = styled.div``;
+const SingleChoiceQuestionStyled = styled.div`
+  display: flex;
+flex-direction: column;
+gap:5px;
+`;
+
+const CoicesContainer = styled.div`
+display: flex;
+flex-direction: column;
+gap: 5px;
+`;

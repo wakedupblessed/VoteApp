@@ -44,7 +44,7 @@ const StyledPollPreview = styled.div`
   color: #000;
   position: relative;
   border-radius: 3px;
-  margin-top: 21px;
+  margin-top: 20px;
 
   &:after {
     content: "";

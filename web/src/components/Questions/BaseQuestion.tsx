@@ -14,4 +14,6 @@ const BaseQuestion: React.FC<BaseQuestionProps> = (
 
 export default BaseQuestion;
 
-const QuestionTitleStyled = styled.p``;
+const QuestionTitleStyled = styled.p`
+  margin-top: 8px;
+`;
