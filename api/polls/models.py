@@ -10,15 +10,15 @@ class Poll(models.Model):
     description = models.CharField(max_length=300)
     number_of_vote = models.IntegerField(default=0)
     creation_date = models.DateTimeField(default=datetime.today())
+    end_date = models.DateTimeField(default=datetime.today() + timedelta(days=1))
     is_anonymous = models.BooleanField(default=False)
-    end_date = models.DateTimeField(default=datetime.today()+timedelta(days=1))
-
+    is_private = models.BooleanField(default=False)
     responders = models.ManyToManyField(User, related_name='responded_polls')
 
 
-class PrivatePoll(models.Model):
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+class PrivatePollRespondents(models.Model):
     pollees = models.ManyToManyField(User)
+    poll = models.ForeignKey(Poll, on_delete=models.RESTRICT)
 
 
 class QuestionType(Enum):
@@ -45,5 +45,6 @@ class Option(models.Model):
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    selected_options = models.ManyToManyField(Option, blank=True)
+    single_option = models.ForeignKey(Option, null=True, on_delete=models.RESTRICT)
+    multiple_options = models.ManyToManyField(Option, blank=True)
     open_answer = models.TextField(blank=True, null=True)
