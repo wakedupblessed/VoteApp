@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { gradientAnimation } from "../GlobalStyles";
-import { IPoll } from "../../api/Polls/interfaces";
-import { PollApi } from "../../api/Polls/api";
-import { Poll } from "./Poll";
+import { gradientAnimation } from "../../GlobalStyles";
+import { IPoll } from "../../../api/Polls/interfaces";
+import { PollApi } from "../../../api/Polls/api";
+import { Poll } from "../Poll";
 import { PollPreview } from "./PollPreview";
 
 export const PollsPreviewContainer = () => {
@@ -36,4 +36,8 @@ const PollPreviewContainer = styled.div`
   position: relative;
   left: 3px;
   width: calc(100% - 3px * 2);
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  
 `;

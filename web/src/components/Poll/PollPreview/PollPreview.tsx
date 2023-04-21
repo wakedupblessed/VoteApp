@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { format, isValid } from "date-fns";
 
-import { gradientAnimation } from "../GlobalStyles";
-import { IPoll } from "../../api/Polls/interfaces";
+import { gradientAnimation } from "../../GlobalStyles";
+import { IPoll } from "../../../api/Polls/interfaces";
 
 export const PollPreview = (poll: IPoll) => {
   // for home page
@@ -91,6 +91,9 @@ const StyledPollPreview = styled.div`
   display: flex;
   background-color: #fff;
   color: #000;
+
+  flex-basis: calc(50% - 10px);
+  margin: 5px; 
 
   background: #fff;
   position: relative;
