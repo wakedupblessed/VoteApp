@@ -9,4 +9,12 @@ export class PollApi {
 
     // we will make request on server later;
   }
+
+  static async get(id: string, test: boolean): Promise<IPoll | undefined> {
+    if (test) {
+      return FAKE_DATA.items.find((poll) => poll.id === id);
+    }
+
+    // we will make request on server later;
+  }
 }

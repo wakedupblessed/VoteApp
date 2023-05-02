@@ -7,7 +7,9 @@ import { IPoll } from "../../api/Polls/interfaces";
 
 export const Poll = (poll: IPoll) => {
   const dateToString = (startDate: Date, endDate: Date) =>
-    isValid(startDate) && isValid(endDate) ? `${format(startDate, "d.M.y H:mm")} - ${format(endDate, "d.M.y H:mm")}` : "deadline not set";
+    isValid(startDate) && isValid(endDate)
+      ? `${format(startDate, "d.M.y H:mm")} - ${format(endDate, "d.M.y H:mm")}`
+      : "deadline not set";
 
   return (
     <StyledPoll>
@@ -19,7 +21,13 @@ export const Poll = (poll: IPoll) => {
         <summary>poll's details</summary>
         <p>{poll.description}</p>
         <SyledPollDetails>
-          <div><p>Avalible:<br />{dateToString(poll.creationDate, poll.endDate)}</p></div>
+          <div>
+            <p>
+              Avalible:
+              <br />
+              {dateToString(poll.creationDate, poll.endDate)}
+            </p>
+          </div>
           <div>
             <p>{poll.numberOfVote} answers</p>
             <p>type: {poll.isAnonymous ? "anonymous" : "not anonymous"}</p>
@@ -47,7 +55,7 @@ const PollAuthor = styled.p`
 `;
 
 const StyledPoll = styled.div`
-  margin-top: 20px; 
+  margin-top: 20px;
   width: calc(100% - 35px);
   display: flex;
   flex-direction: column;
@@ -78,7 +86,6 @@ const PollTitle = styled.h3`
   font-weight: normal;
 `;
 
-
 const SyledPollDetails = styled.div`
   display: flex;
   flex-direction: row;
@@ -95,7 +102,7 @@ const SyledPollDetails = styled.div`
 const StyledDetails = styled.details`
   padding: 10px 10px 5px 15px;
   font-size: ${StyleValues.smallFontWeight};
-  & > p{
+  & > p {
     padding-left: 30px;
   }
 `;

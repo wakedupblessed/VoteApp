@@ -2,21 +2,18 @@ import styled from "styled-components";
 
 import HeaderLink from "../HeaderLink/HeaderLink";
 import { gradientAnimation } from "../GlobalStyles";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <HeaderArea>
       <NavLinkContainer>
         <HeaderLink
           label='Home'
           onClick={() => {
-            alert("work 1");
-          }}
-        />
-        <HeaderLink
-          label='Polls'
-          onClick={() => {
-            alert("work 2");
+            navigate("/");
           }}
         />
       </NavLinkContainer>

@@ -4,10 +4,10 @@ const FAKE_DATA: ApiResponse = {
   items: [
     {
       id: "1",
-      title: "Long poll title 111111111111",
+      title: "Survey on learning on the Action Centers platform",
       description:
         "poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description ",
-      author: "poll author",
+      author: "Sokyrka Kyrylo",
       isAnonymous: false,
       numberOfVote: 5,
       creationDate: new Date(""),

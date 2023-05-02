@@ -69,16 +69,18 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
 
 const StyledSubmitButton = styled.button`
   margin: 10px 0 0 15px;
-    padding: 12px 20px;
-    border-radius: 40px;
-    font-size: 13px;
-    color: #fff;
-    font-weight: normal;
-    background-color: #000;
-    line-height: 16px;
-    border: none;
+  padding: 12px 20px;
+  border-radius: 40px;
+  font-size: 13px;
+  color: #fff;
+  font-weight: normal;
+  background-color: #000;
+  line-height: 16px;
+  border: none;
 `;
 
 const QuestionContainerStyled = styled.div`
   padding: 0px 15px;
+  display: flex;
+  flex-direction: column;
 `;

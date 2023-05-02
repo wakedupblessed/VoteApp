@@ -1,10 +1,10 @@
-import GlobalStyles, {StyledHr} from "./components/GlobalStyles";
+import GlobalStyles from "./components/GlobalStyles";
+import { Outlet } from "react-router-dom";
+
 import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
-import { Poll } from "./components/Poll/Poll";
-import { PollsPreviewContainer } from "./components/Poll/PollPreview/PollsPreviewContainer";
+
 import styled from "styled-components";
-import { PollsContainer } from "./components/Poll/PollsContainer";
 
 export default function App() {
   return (
@@ -13,9 +13,7 @@ export default function App() {
       <PageContainer>
         <Header />
         <PageContent>
-          {/* <StyledHr /> */}
-          <PollsContainer />
-          <PollsPreviewContainer />
+          <Outlet />
         </PageContent>
         <Footer />
       </PageContainer>
