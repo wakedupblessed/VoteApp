@@ -1,35 +1,30 @@
 import styled from "styled-components";
 
-import HeaderLink from "../HeaderLink/HeaderLink";
+import CustomLink from "../CustomLink/CustomLink";
 import { gradientAnimation } from "../GlobalStyles";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../../сontext/AuthContext";
 
 export const Header = () => {
-  const navigate = useNavigate();
+  const { user, logoutUser } = useContext(AuthContext)!;
 
   return (
     <HeaderArea>
       <NavLinkContainer>
-        <HeaderLink
-          label='Home'
-          onClick={() => {
-            navigate("/");
-          }}
-        />
+        <CustomLink label='Home' route='/' />
       </NavLinkContainer>
       <NavAccountLinks>
-        <HeaderLink
-          label='Log in'
-          onClick={() => {
-            alert("log in");
-          }}
-        />
-        <HeaderLink
-          label='Sign up'
-          onClick={() => {
-            alert("sign up");
-          }}
-        />
+        {user ? (
+          <>
+            <StyledUserName>Hello, {user.name}</StyledUserName>
+            <CustomLink label='Log out' route='/' onClick={logoutUser} />
+          </>
+        ) : (
+          <>
+            <CustomLink label='Log in' route='/login' />
+            <CustomLink label='Sign up' route='/signup' />
+          </>
+        )}
       </NavAccountLinks>
     </HeaderArea>
   );
@@ -55,4 +50,11 @@ const NavLinkContainer = styled.div`
 const NavAccountLinks = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const StyledUserName = styled.div`
+  display: inline-block;
+  color: #000;
+  padding: 0 40px 0 0;
+  font-size: 24px;
 `;

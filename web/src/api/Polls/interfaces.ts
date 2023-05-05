@@ -43,4 +43,3 @@ export enum QuestionType {
   MultipleChoice,
   OpenAnswer,
 }
-

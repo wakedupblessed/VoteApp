@@ -2,9 +2,9 @@ import React, { ReactElement } from "react";
 import styled from "styled-components";
 
 export interface ButtonStyle {
-  backgroundColor: string;
-  textColor: string;
-  hoverBackgroundColor: string;
+  backgroundcolor: string;
+  textcolor: string;
+  hoverbackgroundcolor: string;
 }
 
 interface ButtonProps {
@@ -15,9 +15,9 @@ interface ButtonProps {
 
 const Button = (props: ButtonProps): ReactElement => {
   const defaultButtonStyle: ButtonStyle = {
-    backgroundColor: "white",
-    textColor: "black",
-    hoverBackgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundcolor: "white",
+    textcolor: "black",
+    hoverbackgroundcolor: "rgba(255, 255, 255, 0.8)",
   };
 
   const finalButtonStyle = { ...defaultButtonStyle, ...props.buttonStyle };

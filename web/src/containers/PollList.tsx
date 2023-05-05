@@ -25,13 +25,13 @@ export const PollList = () => {
   const renderPollItems = () => {
     return polls?.map((item) => {
       return (
-        <>
-          <PollPreview
-            key={item.id}
-            {...item}
-            onPollClick={() => navigate("/polls/" + item.id)}
-          ></PollPreview>
-        </>
+        <PollPreview
+          key={item.id}
+          title={item.title}
+          author={item.author}
+          endDate={item.endDate}
+          onPollClick={() => navigate("/polls/" + item.id)}
+        />
       );
     });
   };

@@ -1,5 +1,6 @@
 import { IPoll, IQuestion, IOption } from "./interfaces";
 import FAKE_DATA from "./FAKE_DATA";
+import axios from "axios";
 
 export class PollApi {
   static async getAll(test: boolean) {
