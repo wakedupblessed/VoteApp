@@ -18,7 +18,7 @@ const OpenAnswerQuestion = (props: CustomQuestionProps) => {
     <OpenAnswerQuestionStyled>
       <BaseQuestion index={props.index} title={props.data.title}>
         <div>
-          <input type='text' id={question.id} onChange={handleAnswerChange} />
+          <StyledTextArea id={question.id} onChange={handleAnswerChange} />
         </div>
       </BaseQuestion>
     </OpenAnswerQuestionStyled>
@@ -28,3 +28,10 @@ const OpenAnswerQuestion = (props: CustomQuestionProps) => {
 export default OpenAnswerQuestion;
 
 const OpenAnswerQuestionStyled = styled.div``;
+
+const StyledTextArea = styled.textarea`
+  width: 100%;
+  min-height: 5rem;
+  font-size: 15px;
+  resize: none;
+`;

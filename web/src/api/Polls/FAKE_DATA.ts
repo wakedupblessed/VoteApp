@@ -72,7 +72,7 @@ const FAKE_DATA: ApiResponse = {
         {
           id: "gender",
           title: "What is your gender?",
-          type: QuestionType.SingleChoice,
+          type: QuestionType.MultipleChoice,
           options: [
             {
               id: "male",

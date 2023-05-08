@@ -23,11 +23,11 @@ const MultipleChoiceQuestion = (props: CustomQuestionProps) => {
   return (
     <MultipleChoiceQuestionStyled>
       <BaseQuestion index={props.index} title={props.data.title}>
-        <div>
+        <StyledOptionsContainer>
           {question.options.map((option) => (
             <label key={option.id}>
               <input
-                type='checkbox'
+                type="checkbox"
                 name={`question-${question.id}`}
                 value={option.id}
                 checked={selectedOptions.includes(option.id)}
@@ -36,7 +36,7 @@ const MultipleChoiceQuestion = (props: CustomQuestionProps) => {
               {option.title}
             </label>
           ))}
-        </div>
+        </StyledOptionsContainer>
       </BaseQuestion>
     </MultipleChoiceQuestionStyled>
   );
@@ -45,3 +45,10 @@ const MultipleChoiceQuestion = (props: CustomQuestionProps) => {
 export default MultipleChoiceQuestion;
 
 const MultipleChoiceQuestionStyled = styled.div``;
+
+const StyledOptionsContainer = styled.div`
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+`;

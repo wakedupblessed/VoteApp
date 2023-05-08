@@ -3,12 +3,13 @@ import styled from "styled-components";
 export const NotFound = () => {
   return (
     <>
-      <Title>Not Found</Title>
+      <Title>Page Not Found</Title>
     </>
   );
 };
 
 const Title = styled.div`
+  text-align:center;
   margin-top: 40px;
   font-size: 40px;
   font-weight: 400;
