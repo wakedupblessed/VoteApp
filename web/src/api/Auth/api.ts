@@ -43,14 +43,10 @@ export class AuthApi {
     return null;
   }
 
-  static async registerUser(username: string, password: string) {
+  static async registerUser(email: string, username: string, password: string) {
     try {
-      console.log({
-        username,
-        password,
-      });
-
       const response = await axios.post(REGISTER_URL, {
+        email,
         username,
         password,
       });

@@ -34,10 +34,11 @@ export const AuthProvider = ({ children }: Props) => {
   const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const email = event.currentTarget.elements.email.value;
     const username = event.currentTarget.elements.username.value;
     const password = event.currentTarget.elements.password.value;
 
-    const data = await AuthApi.registerUser(username, password);
+    const data = await AuthApi.registerUser(email, username, password);
 
     if (data) {
       navigate("/login");
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }: Props) => {
   const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const username = event.currentTarget.elements.username.value;
+    const username = event.currentTarget.elements.email.value;
     const password = event.currentTarget.elements.password.value;
 
     const data = await AuthApi.fetchToken(username, password);

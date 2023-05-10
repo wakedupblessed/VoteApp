@@ -10,7 +10,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         token['name'] = user.username
-        token['safsa'] = user.email
+        token['email'] = user.email
 
         return token
 
@@ -18,12 +18,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'password')
+        fields = ('id', 'email', 'username', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
     @classmethod
     def create(self, validated_data):
         user = User.objects.create_user(
+            email=validated_data['email'],
             username=validated_data['username'],
             password=validated_data['password'],
         )

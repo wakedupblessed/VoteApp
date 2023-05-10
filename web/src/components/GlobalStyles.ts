@@ -43,9 +43,41 @@ export const StyledHr = styled.hr`
   background: ${StyleValues.gradiente};
   animation: ${gradientAnimation} 15s ease infinite;
   background-size: 400% 400%;
+`;
 
-  /* border-top: 1px solid #ccc;
-  margin: 20px 0; */
+export const StyledInput = styled.input`
+  width: 200px;
+  font-size: 18px;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const StyledButton = styled.button`
+  width: fit-content;
+  padding: 12px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 16px;
+  color: #000;
+  background-color: #fff;
+  border-color: #000;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #000;
+    color: #fff;
+  }
+
+  &:active {
+    background-color: #000;
+    color: #fff;
+  }
 `;
 
 export default GlobalStyles;
