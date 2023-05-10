@@ -1,21 +1,36 @@
-import React from "react";
-import "./App.css";
+import GlobalStyles from "./components/GlobalStyles";
+import { Outlet } from "react-router-dom";
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
+import { Header } from "./components/Header/Header";
+import { Footer } from "./components/Footer/Footer";
 
-function App() {
+import styled from "styled-components";
+import { AuthProvider } from "./сontext/AuthProvider";
+
+export default function App() {
   return (
-    <div className='App'>
-      <Router>
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/login' element={<LoginPage />} />
-        </Routes>
-      </Router>
-    </div>
+    <>
+      <GlobalStyles />
+      <PageContainer>
+        <AuthProvider>
+          <Header />
+          <PageContent>
+            <Outlet />
+          </PageContent>
+          <Footer />
+        </AuthProvider>
+      </PageContainer>
+    </>
   );
 }
 
-export default App;
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const PageContent = styled.div`
+  flex: 1;
+  padding: 0 150px;
+`;
