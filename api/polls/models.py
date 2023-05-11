@@ -45,6 +45,6 @@ class Option(models.Model):
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    single_option = models.ForeignKey(Option, null=True, on_delete=models.RESTRICT)
-    multiple_options = models.ManyToManyField(Option, blank=True)
+    single_option = models.ForeignKey(Option, null=True, on_delete=models.RESTRICT, related_name='single_option')
+    multiple_options = models.ManyToManyField(Option, blank=True, related_name='multiple_options')
     open_answer = models.TextField(blank=True, null=True)
