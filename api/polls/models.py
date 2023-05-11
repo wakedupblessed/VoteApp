@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 
 
+
 class Poll(models.Model):
     title = models.CharField(max_length=50)
     author = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='authored_polls')

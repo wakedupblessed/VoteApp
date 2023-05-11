@@ -57,3 +57,7 @@ manage.py
 # example database
 drf_example
 *.pyc
+api/api/__pycache__/__init__.cpython-38.pyc
+api/api/__pycache__/settings.cpython-38.pyc
+api/api/__pycache__/urls.cpython-38.pyc
+api/api/__pycache__/wsgi.cpython-38.pyc
