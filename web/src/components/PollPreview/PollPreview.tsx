@@ -3,7 +3,6 @@ import { format, isValid } from "date-fns";
 import { ArrowRight } from "react-bootstrap-icons";
 
 import { gradientAnimation } from "../GlobalStyles";
-import { IPoll } from "../../api/Polls/interfaces";
 
 interface IPollPreview {
   title: string;

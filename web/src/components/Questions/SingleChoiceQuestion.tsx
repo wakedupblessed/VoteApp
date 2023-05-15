@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { CustomQuestionProps } from "./QuestionInterfaces";
@@ -17,7 +17,7 @@ const SingleChoiceQuestion = (props: CustomQuestionProps) => {
   return (
     <SingleChoiceQuestionStyled>
       <BaseQuestion index={props.index} title={props.data.title}>
-        <CoicesContainer>
+        <OptionsContainer>
           {props.data.options.map((option) => (
             <label key={option.id}>
               <input
@@ -30,7 +30,7 @@ const SingleChoiceQuestion = (props: CustomQuestionProps) => {
               {option.title}
             </label>
           ))}
-        </CoicesContainer>
+        </OptionsContainer>
       </BaseQuestion>
     </SingleChoiceQuestionStyled>
   );
@@ -40,12 +40,12 @@ export default SingleChoiceQuestion;
 
 const SingleChoiceQuestionStyled = styled.div`
   display: flex;
-flex-direction: column;
-gap:5px;
+  flex-direction: column;
+  gap: 5px;
 `;
 
-const CoicesContainer = styled.div`
-display: flex;
-flex-direction: column;
-gap: 5px;
+const OptionsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 `;

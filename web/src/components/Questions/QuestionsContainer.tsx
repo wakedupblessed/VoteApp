@@ -6,6 +6,7 @@ import { IQuestionsContainer, CustomQuestionProps } from "./QuestionInterfaces";
 import SingleChoiceQuestion from "./SingleChoiceQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import OpenAnswerQuestion from "./OpenAnswerQuestion";
+import { StyledButton } from "../GlobalStyles";
 
 const questionStateReducer = (
   state: Record<string, string>,
@@ -58,29 +59,23 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <QuestionContainerStyled>
+    <QuestionContainerStyled>
+      <form onSubmit={handleSubmit}>
         {props.questions.map(renderQuestion)}
-      </QuestionContainerStyled>
-      <StyledSubmitButton type='submit'>Send answers</StyledSubmitButton>
-    </form>
+        <StyledButton type='submit'>Send answers</StyledButton>
+      </form>
+    </QuestionContainerStyled>
   );
 };
-
-const StyledSubmitButton = styled.button`
-  margin: 10px 0 0 15px;
-  padding: 12px 20px;
-  border-radius: 40px;
-  font-size: 13px;
-  color: #fff;
-  font-weight: normal;
-  background-color: #000;
-  line-height: 16px;
-  border: none;
-`;
 
 const QuestionContainerStyled = styled.div`
   padding: 0px 15px;
   display: flex;
   flex-direction: column;
+
+  & > form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 `;

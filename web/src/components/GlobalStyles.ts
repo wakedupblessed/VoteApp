@@ -51,6 +51,21 @@ export const StyledInput = styled.input`
   border-top: 0;
   border-left: 0;
   border-right: 0;
+  border-color: #ccc;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const StyledTextArea = styled.input`
+  height: 50px;
+  width: auto;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
 
   &:focus {
     outline: none;
@@ -64,20 +79,37 @@ export const StyledButton = styled.button`
   font-size: 14px;
   font-weight: normal;
   line-height: 16px;
-  color: #000;
-  background-color: #fff;
-  border-color: #000;
+  color: #fff;
+  background-color: #000;
+  border: 1px solid black;
 
   &:hover {
+    outline: none;
     cursor: pointer;
-    background-color: #000;
-    color: #fff;
+    background-color: #fff;
+    color: #000;
   }
 
   &:active {
-    background-color: #000;
-    color: #fff;
+    outline: none;
+    background-color: #fff;
+    color: #000;
   }
+`;
+
+export const CheckBoxWithInputArea = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const PollElementContainer = styled.div`
+  width: 600px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex-direction: column;
+  display: flex;
+  gap: 15px;
 `;
 
 export default GlobalStyles;
