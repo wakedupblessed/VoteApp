@@ -1,33 +1,9 @@
 from rest_framework.decorators import api_view
-from rest_framework import serializers, status
-from .models import Poll, Question, Option
-from django.contrib.auth.models import User
+from rest_framework import status
 from django.http import HttpResponse
 from rest_framework.response import Response
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "username"]
-
-
-class OptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Option
-        fields = "__all__"
-
-
-class PollSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Poll
-        fields = "__all__"
-
-
-class QuestionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Question
-        fields = "__all__"
+from .jsonProcessors import *
+import uuid
 
 
 def index(request):
@@ -44,8 +20,8 @@ def get_all(request):
     serialized_data = []
     for poll in polls:
         item = PollSerializer(poll).data
-        item['author'] = UserSerializer(poll.author).data
-        item['responders'] = [UserSerializer(responder).data for responder in poll.responders.all()]
+        item['author'] = ShortUserSerializer(poll.author).data
+        item['responders'] = [ShortUserSerializer(responder).data for responder in poll.responders.all()]
         serialized_data.append(item)
     return Response(serialized_data)
 
@@ -54,58 +30,65 @@ def get_all(request):
 def get(request, id):
     poll = Poll.objects.get(id=id)
     serialized_data = PollSerializer(poll).data
-    serialized_data['author'] = UserSerializer(poll.author).data
-    serialized_data['responders'] = [UserSerializer(responder).data for responder in poll.responders.all()]
+    serialized_data['author'] = ShortUserSerializer(poll.author).data
+    serialized_data['responders'] = [ShortUserSerializer(responder).data for responder in poll.responders.all()]
     return Response(serialized_data)
 
 
-def create_question(data):
-    question = QuestionSerializer(data=data.get("question_info"))
-
-    if not question.is_valid():
-        raise Exception("abtoiba")
-    if Question.objects.filter(**data).exists():
-        raise Exception("avtoiba")
-
-    question.save()
-    question_id = Question.objects.get(title=question.data["title"]).id
-
-    for option_data in data.get('option_data'):
-        option_data["question"] = question_id
-        if not create_option(option_data):
-            raise Exception("option-related bebra")
-
-    return True
+def create_question(data, poll_id):
+    question = QuestionDeserializer(data=data.get("question_info"))
+    if question.is_valid():
+        question.validated_data["poll_id"] = poll_id
+        question.validated_data["id"] = uuid.uuid4().hex
+        question.save()
+        for option_data in data.get('option_data'):
+            create_option(option_data, question.validated_data["id"])
+        return Response({'message': 'Poll created successfully'})
+    else:
+        return Response(question.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def create_option(data):
-    option = OptionSerializer(data=data)
+def create_option(data, question_id):
+    option = QuestionDeserializer(data=data.get("question_info"))
+    if option.is_valid():
+        option.validated_data["question_id"] = question_id
+        option.validated_data["id"] = uuid.uuid4().hex
+        option.save()
+        return Response({'message': 'Poll created successfully'})
+    else:
+        return Response(option.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    if not option.is_valid():
-        raise Exception("option not  valid")
-    if Option.objects.filter(**data).exists():
-        raise Exception("option  exists")
 
-    option.save()
-    return True
-
-
+# handle recursive delete element on invalid element
 @api_view(['POST'])
 def create(request):
-    poll = PollSerializer(data=request.data.get('poll_data'))
-
-    if Poll.objects.filter(**request.data["poll_data"]).exists():
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    for question_data in request.data.get('question_data'):
-        if not create_question(question_data):
-            raise Exception("question-related bebra")
-
+    poll = PollDeserializer(data=request.data.get('poll_data'))
     if poll.is_valid():
+        poll.validated_data["id"] = uuid.uuid4().hex
         poll.save()
-        return Response(poll.data)
 
-    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        question_data_list = request.data.get('question_data')
+        for question_data in question_data_list:
+            question = QuestionDeserializer(data=question_data.get("question_info"))
+            if question.is_valid():
+                question.validated_data["poll_id"] = poll.validated_data["id"]
+                question.validated_data["id"] = uuid.uuid4().hex
+                question.save()
+
+                return Response(f"{request.data.get('option_data', [])}")
+                option_data_list = request.data.get('option_data')
+                for option_data in option_data_list:
+
+                    option = QuestionDeserializer(data=option_data.get("question_info"))
+                    if option.is_valid():
+                        option.validated_data["question_id"] = question.validated_data["id"]
+                        option.validated_data["id"] = uuid.uuid4().hex
+                        option.save()
+
+        return Response({'message': 'Poll created successfully'})
+    else:
+        return Response(poll.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['DELETE'])

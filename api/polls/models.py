@@ -5,6 +5,7 @@ from enum import Enum
 
 
 class Poll(models.Model):
+    id = models.CharField(primary_key=True, max_length=20)
     title = models.CharField(max_length=50)
     author = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='authored_polls')
     description = models.CharField(max_length=300)
@@ -17,6 +18,7 @@ class Poll(models.Model):
 
 
 class PrivatePollRespondents(models.Model):
+    id = models.CharField(primary_key=True, max_length=20)
     pollees = models.ManyToManyField(User)
     poll = models.ForeignKey(Poll, on_delete=models.RESTRICT)
 
@@ -28,6 +30,7 @@ class QuestionType(Enum):
 
 
 class Question(models.Model):
+    id = models.CharField(primary_key=True, max_length=20)
     title = models.CharField(max_length=80)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     question_type = models.CharField(
@@ -38,11 +41,13 @@ class Question(models.Model):
 
 
 class Option(models.Model):
+    id = models.CharField(primary_key=True, max_length=20)
     title = models.CharField(max_length=40)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
 
 class Answer(models.Model):
+    id = models.CharField(primary_key=True, max_length=20)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     single_option = models.ForeignKey(Option, null=True, on_delete=models.RESTRICT, related_name='single_option')
