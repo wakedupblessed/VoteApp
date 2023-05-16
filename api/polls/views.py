@@ -102,14 +102,13 @@ def create(request):
         return Response("invalid poll", status=status.HTTP_400_BAD_REQUEST)
 
 
-
 @api_view(['DELETE'])
 def delete(request, id):
     if not Poll.objects.filter(id=id).exists():
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(f'poll {id} doesnt exist', status=status.HTTP_404_NOT_FOUND)
 
     Poll.objects.get(id=id).delete()
-    return Response(status=status.HTTP_200_OK)
+    return Response(f'poll {id} deleted', status=status.HTTP_200_OK)
 
 
 #add responder to poll and answer
