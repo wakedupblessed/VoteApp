@@ -17,21 +17,54 @@ def create(request):
 @api_view(['GET'])
 def get_all(request):
     polls = Poll.objects.all()
-    serialized_data = []
+    data = []
     for poll in polls:
-        item = PollSerializer(poll).data
-        item['author'] = ShortUserSerializer(poll.author).data
-        item['responders'] = [ShortUserSerializer(responder).data for responder in poll.responders.all()]
-        serialized_data.append(item)
-    return Response(serialized_data)
+        serialized_data = {"poll_data": PollSerializer(poll).data}
+        serialized_data["poll_data"]['author'] = ShortUserSerializer(poll.author).data
+        serialized_data["poll_data"]['responders'] = [ShortUserSerializer(responder).data for responder in
+                                                      poll.responders.all()]
+        question_data = []
+        for question in Question.objects.filter(poll=poll.id):
+            if question.question_type == QuestionType.OPEN_ANSWER.value:
+                question_data += [{"question_info": QuestionSerializer(question).data}]
+            else:
+                question_data += [{"question_info": QuestionSerializer(question).data,
+                                   "option_data": [OptionSerializer(option).data for option in
+                                                   Option.objects.filter(question=question.id)]}]
+        serialized_data['question_data'] = question_data
+        data.append(serialized_data)
+
+    return Response(data=data)
+
+
+@api_view(['GET'])
+def get_all_preview(request):
+    polls = Poll.objects.all()
+    data = []
+    for poll in polls:
+        data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data, "endDate": poll.end_date})
+    return Response(data)
+
+
+@api_view(['GET'])
+def get_preview(request, id):
+    poll = Poll.objects.get(id=id)
+    return Response(data={"id": id, "title": poll.title, "author" : ShortUserSerializer(poll.author).data, "endDate": poll.end_date})
 
 
 @api_view(['GET'])
 def get(request, id):
     poll = Poll.objects.get(id=id)
-    serialized_data = PollSerializer(poll).data
-    serialized_data['author'] = ShortUserSerializer(poll.author).data
-    serialized_data['responders'] = [ShortUserSerializer(responder).data for responder in poll.responders.all()]
+    serialized_data = {"poll_data" : PollSerializer(poll).data}
+    serialized_data["poll_data"]['author'] = ShortUserSerializer(poll.author).data
+    serialized_data["poll_data"]['responders'] = [ShortUserSerializer(responder).data for responder in poll.responders.all()]
+    question_data = []
+    for question in Question.objects.filter(poll=poll.id):
+        if question.question_type == QuestionType.OPEN_ANSWER.value:
+            question_data += [{"question_info": QuestionSerializer(question).data}]
+        else:
+            question_data += [{"question_info": QuestionSerializer(question).data, "option_data":[OptionSerializer(option).data for option in Option.objects.filter(question=question.id)]}]
+    serialized_data['question_data'] = question_data
     return Response(serialized_data)
 
 
