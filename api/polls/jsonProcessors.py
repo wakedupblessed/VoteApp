@@ -25,7 +25,7 @@ class OptionDeserializer(serializers.Serializer):
     title = serializers.CharField(max_length=80)
 
     def create(self, validated_data):
-        return Question.objects.create(**validated_data)
+        return Option.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():
