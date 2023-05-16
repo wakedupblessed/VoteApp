@@ -59,7 +59,6 @@ def create_option(data, question_id):
         return Response(option.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# handle recursive delete elements on invalid element
 @api_view(['POST'])
 def create(request):
     poll = PollDeserializer(data=request.data.get('poll_data'))
@@ -74,20 +73,33 @@ def create(request):
                 question.validated_data["poll_id"] = poll.validated_data["id"]
                 question.validated_data["id"] = uuid.uuid4().hex
                 question.save()
-                if question.validated_data["question_type"] != "OpenAnswer":
-                    option_data_list = question_data.get('option_data')
-                    for option_data in option_data_list:
-                        option = OptionDeserializer(data=option_data)
-                        if option.is_valid():
-                            option.validated_data["question_id"] = question.validated_data["id"]
-                            option.validated_data["id"] = uuid.uuid4().hex
-                            option.save()
-                        else:
-                            return Response(f"invalid option")
 
-        return Response({'message': 'Poll created successfully'})
+                if question.validated_data["question_type"] != "OpenAnswer":
+                    try:
+                        option_data_list = question_data.get('option_data')
+                        for option_data in option_data_list:
+                            option = OptionDeserializer(data=option_data)
+                            if option.is_valid():
+                                option.validated_data["question_id"] = question.validated_data["id"]
+                                option.validated_data["id"] = uuid.uuid4().hex
+                                option.save()
+                            else:
+                                Poll.objects.get(id=poll.validated_data["id"]).delete()
+                                return Response("invalid option", status=status.HTTP_400_BAD_REQUEST)
+                    except TypeError:
+                        Poll.objects.get(id=poll.validated_data["id"]).delete()
+                        return Response(
+                            "single/multiple question must have options",
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
+
+            else:
+                Poll.objects.get(id=poll.validated_data["id"]).delete()
+                return Response("invalid question", status=status.HTTP_400_BAD_REQUEST)
+
+        return Response('Poll created successfully', status=status.HTTP_200_OK)
     else:
-        return Response(poll.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("invalid poll", status=status.HTTP_400_BAD_REQUEST)
 
 
 
