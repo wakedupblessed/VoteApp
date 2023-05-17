@@ -6,14 +6,6 @@ from .jsonProcessors import *
 import uuid
 
 
-def index(request):
-    return HttpResponse("polls index")
-
-
-def create(request):
-    return HttpResponse(f"polls create")
-
-
 @api_view(['GET'])
 def get_all(request):
     polls = Poll.objects.all()
@@ -49,7 +41,7 @@ def get_all_preview(request):
 @api_view(['GET'])
 def get_preview(request, id):
     poll = Poll.objects.get(id=id)
-    return Response(data={"id": id, "title": poll.title, "author" : ShortUserSerializer(poll.author).data, "endDate": poll.end_date})
+    return Response(data={"id": id, "title": poll.title, "author": ShortUserSerializer(poll.author).data, "endDate": poll.end_date})
 
 
 @api_view(['GET'])
@@ -68,35 +60,13 @@ def get(request, id):
     return Response(serialized_data)
 
 
-def create_question(data, poll_id):
-    question = QuestionDeserializer(data=data.get("question_info"))
-    if question.is_valid():
-        question.validated_data["poll_id"] = poll_id
-        question.validated_data["id"] = uuid.uuid4().hex
-        question.save()
-        for option_data in data.get('option_data'):
-            create_option(option_data, question.validated_data["id"])
-        return Response({'message': 'Poll created successfully'})
-    else:
-        return Response(question.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-def create_option(data, question_id):
-    option = QuestionDeserializer(data=data.get("question_info"))
-    if option.is_valid():
-        option.validated_data["question_id"] = question_id
-        option.validated_data["id"] = uuid.uuid4().hex
-        option.save()
-        return Response({'message': 'Poll created successfully'})
-    else:
-        return Response(option.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 @api_view(['POST'])
 def create(request):
     poll = PollDeserializer(data=request.data.get('poll_data'))
     if poll.is_valid():
         poll.validated_data["id"] = uuid.uuid4().hex
+        if poll.validated_data["is_private"] and len(poll.validated_data["responders"]) < 1:
+            return Response("private poll must have responders", status=status.HTTP_400_BAD_REQUEST)
         poll.save()
 
         question_data_list = request.data.get('question_data')

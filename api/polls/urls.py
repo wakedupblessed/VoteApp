@@ -1,4 +1,4 @@
-from .views import index, create, get, get_all, delete, vote, get_preview, get_all_preview
+from .views import create, get, get_all, delete, vote, get_preview, get_all_preview
 from django.urls import path, re_path
 
 urlpatterns = [

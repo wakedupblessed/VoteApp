@@ -53,9 +53,14 @@ class PollDeserializer(serializers.Serializer):
     end_date = serializers.DateTimeField()
     is_anonymous = serializers.BooleanField(default=False)
     is_private = serializers.BooleanField(default=False)
+    responders = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        many=True,
+        write_only=True
+    )
 
     def create(self, validated_data):
-        responders_data = validated_data.pop('responders', [])
+        responders_data = validated_data.pop('responders')
         poll = Poll.objects.create(**validated_data)
         poll.responders.set(responders_data)
         return poll
