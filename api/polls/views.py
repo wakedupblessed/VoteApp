@@ -114,6 +114,6 @@ def delete(request, id):
     return Response(f'poll {id} deleted', status=status.HTTP_200_OK)
 
 
-#add responder to poll and answer
-def vote(request, id):
-    return HttpResponse(status=status.HTTP_200_OK)
+@api_view(['POST'])
+def vote(request):
+    return Response(data=AnswerDeserializer(request.data).data)
