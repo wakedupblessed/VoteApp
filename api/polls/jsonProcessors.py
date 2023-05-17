@@ -96,54 +96,52 @@ class QuestionDeserializer(serializers.Serializer):
 
 
 class AnswerDeserializer(serializers.Serializer):
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all()
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        source='user',
+        write_only=True
     )
-    question = serializers.PrimaryKeyRelatedField(
-        queryset=Question.objects.all()
+    question_id = serializers.PrimaryKeyRelatedField(
+        queryset=Question.objects.all(),
+        source='question',
+        write_only=True
     )
-    single_option = serializers.PrimaryKeyRelatedField(
+    single_option_id = serializers.PrimaryKeyRelatedField(
         queryset=Option.objects.all(),
-        allow_null=True
+        source='single_option',
+        allow_null=True,
+        write_only=True
     )
     multiple_options = serializers.PrimaryKeyRelatedField(
         queryset=Option.objects.all(),
         many=True,
-        required=False,
-        allow_empty=True
+        write_only=True
     )
-    open_answer = serializers.CharField()
+    open_answer = serializers.CharField(max_length=300, allow_blank=True, allow_null=True, required=False)
 
     def create(self, validated_data):
-        user = validated_data.pop('user')
-        question = validated_data.pop('question')
-        single_option = validated_data.pop('single_option', None)
-        multiple_options = validated_data.pop('multiple_options', [])
-        open_answer = validated_data.pop('open_answer')
-
-        answer = Answer(
-            user=user,
-            question=question,
-            single_option=single_option,
-            open_answer=open_answer
-        )
-        answer.save()
-        answer.multiple_options.set(multiple_options)
-        answer.user.set(user)
-
+        multiple_options_data = validated_data.pop('multiple_options')
+        answer = Answer.objects.create(**validated_data)
+        answer.multiple_options.set(multiple_options_data)
         return answer
 
     def update(self, instance, validated_data):
-        single_option = validated_data.pop('single_option', None)
-        multiple_options = validated_data.pop('multiple_options', [])
-        open_answer = validated_data.pop('open_answer')
+        user_data = validated_data.pop('user', None)
+        question_data = validated_data.pop('question', None)
+        single_option_data = validated_data.pop('single_option', None)
+        multiple_options_data = validated_data.pop('multiple_options', None)
 
-        instance.user = validated_data.get('user', instance.user)
-        instance.question = validated_data.get('question', instance.question)
-        instance.single_option = single_option
-        instance.open_answer = open_answer
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if user_data is not None:
+            instance.user = user_data
+        if question_data is not None:
+            instance.question = question_data
+        if single_option_data is not None:
+            instance.single_option = single_option_data
+        if multiple_options_data is not None:
+            instance.multiple_options.set(multiple_options_data)
+
         instance.save()
-
-        instance.multiple_options.set(multiple_options)
-
         return instance

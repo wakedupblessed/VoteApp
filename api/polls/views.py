@@ -116,4 +116,13 @@ def delete(request, id):
 
 @api_view(['POST'])
 def vote(request):
-    return Response(data=AnswerDeserializer(request.data).data)
+    for answer in request.data.get("answers"):
+        answer = AnswerDeserializer(data=answer)
+        if answer.is_valid():
+            answer.validated_data["id"] = uuid.uuid4().hex
+            answer.save()
+        else:
+            return Response(data=f"invalid answer {answer.errors}")
+    return Response("voted")
+
+
