@@ -1,6 +1,5 @@
 from rest_framework.decorators import api_view
 from rest_framework import status
-from django.http import HttpResponse
 from rest_framework.response import Response
 from .jsonProcessors import *
 import uuid
@@ -116,13 +115,48 @@ def delete(request, id):
 
 @api_view(['POST'])
 def vote(request):
+    #created list of answer object
+    answers = []
     for answer in request.data.get("answers"):
         answer = AnswerDeserializer(data=answer)
         if answer.is_valid():
+            if Answer.objects.filter(question=answer.validated_data["question"],
+                                  user=answer.validated_data["user"]).exists():
+                return Response(data=f"user has voted", status=status.HTTP_400_BAD_REQUEST)
             answer.validated_data["id"] = uuid.uuid4().hex
-            answer.save()
+            answers.append(answer)
         else:
-            return Response(data=f"invalid answer {answer.errors}")
-    return Response("voted")
+            return Response(data=f"invalid answer {answer.errors}", status=status.HTTP_400_BAD_REQUEST)
+
+    # check if same user vote
+    set_user_ids = {answer.validated_data["user"].id for answer in answers}
+    if len(set_user_ids) > 1:
+        return Response("one user must vote once at a poll", status=status.HTTP_400_BAD_REQUEST)
+
+    # all question answered
+    set_poll_ids = {answer.validated_data["question"].poll_id for answer in answers}
+    if len(set_poll_ids) > 1:
+        return Response("questions must be from same poll", status=status.HTTP_400_BAD_REQUEST)
+    poll_id = set_poll_ids.pop()
+    available_question_ids = [available_question.id for available_question in Question.objects.filter(poll=poll_id).all()]
+    questions_ids = [answer.validated_data["question"].id for answer in answers]
+    if len(available_question_ids) != len(answers) or [id for id in questions_ids if id not in available_question_ids]:
+        return Response("invalid questions query", status=status.HTTP_400_BAD_REQUEST)
+
+    # matching: option - question - answer
+    for answer in answers:
+        available_option_ids = [option.id for option in Option.objects.filter(question=answer.validated_data["question"].id)]
+        current_option_ids = [option.id for option in answer.validated_data["multiple_options"]]
+        if answer.validated_data["single_option"]:
+            current_option_ids.append(answer.validated_data["single_option"].id)
+        if len(current_option_ids) > 0:
+            answer.validated_data["open_answer"] = None
+            if len(available_option_ids) < len(current_option_ids) or [id for id in current_option_ids if
+                                                               id not in available_option_ids]:
+                return Response("invalid matching: option - question - answer", status=status.HTTP_400_BAD_REQUEST)
+
+    # write to db
+    [answer.save() for answer in answers]
+    return Response("voted", status=status.HTTP_200_OK)
 
 
