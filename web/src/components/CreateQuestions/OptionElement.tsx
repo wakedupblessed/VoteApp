@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
-import { StyledInput } from "../GlobalStyles";
-import { X, Square, Circle } from "react-bootstrap-icons";
-import { QuestionType } from "../../api/Polls/interfaces";
+import React, { useCallback, useEffect, useState } from "react";
+import { X } from "react-bootstrap-icons";
 import styled from "styled-components";
 
-interface ListQuestionProps {
+import { QuestionType } from "../../api/Polls/interfaces";
+import { StyledInput } from "../GlobalStyles";
+import { Checkbox } from "../CustomCheckBox/CheckBox";
+
+interface OptionElementProps {
   placeholder?: string;
   value?: string;
   type: QuestionType.MultipleChoice | QuestionType.SingleChoice;
@@ -14,23 +16,7 @@ interface ListQuestionProps {
   inputRef?: React.RefObject<HTMLInputElement> | null;
 }
 
-const Checkbox = ({
-  type,
-}: {
-  type: QuestionType.MultipleChoice | QuestionType.SingleChoice;
-}) => {
-  return (
-    <>
-      {type === QuestionType.MultipleChoice ? (
-        <StyledSquare />
-      ) : (
-        <StyledCircle />
-      )}
-    </>
-  );
-};
-
-const ListQuestion = ({
+const OptionElement = ({
   placeholder,
   value,
   type,
@@ -38,14 +24,31 @@ const ListQuestion = ({
   onDelete,
   handleFakeOption,
   inputRef,
-}: ListQuestionProps) => {
+}: OptionElementProps) => {
   useEffect(() => {
     if (inputRef?.current && value && value.startsWith("Variant")) {
       inputRef.current.focus();
     }
   }, [value, inputRef]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [localValue, setLocalValue] = useState(value);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  const handleLocalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (handleFakeOption) {
+      return;
+    }
+    console.log();
+    setLocalValue(event.target.value);
+  };
+
+  const handleBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (handleFakeOption) {
+      return;
+    }
     if (onChange) {
       onChange(e.target.value);
     }
@@ -63,9 +66,10 @@ const ListQuestion = ({
       <Checkbox type={type} />
       <OptionInput
         placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        ref={!handleFakeOption ? inputRef : null}
+        value={localValue}
+        onChange={handleLocalChange}
+        onBlur={handleBlur}
+        ref={inputRef}
         onClick={handleClick}
       />
       {!handleFakeOption && <StyledX onClick={onDelete} />}
@@ -74,7 +78,7 @@ const ListQuestion = ({
 };
 
 const OptionInput = styled(StyledInput)`
-  flex-grow: 1;
+  flex-grow: 0.5;
 `;
 
 const OptionContainer = styled.div`
@@ -84,22 +88,10 @@ const OptionContainer = styled.div`
 `;
 
 const StyledX = styled(X)`
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-left: 0.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-left: 0.25rem;
   cursor: pointer;
 `;
 
-const StyledSquare = styled(Square)`
-  width: 1.2rem;
-  height: 1.2rem;
-  margin-right: 0.5rem;
-`;
-
-const StyledCircle = styled(Circle)`
-  width: 1.2rem;
-  height: 1.2rem;
-  margin-right: 0.5rem;
-`;
-
-export default ListQuestion;
+export default OptionElement;

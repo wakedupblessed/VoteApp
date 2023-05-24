@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import React, { useReducer } from "react";
 import styled from "styled-components";
 
 import { IQuestion, QuestionType } from "../../api/Polls/interfaces";

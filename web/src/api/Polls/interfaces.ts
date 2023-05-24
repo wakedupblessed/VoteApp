@@ -27,6 +27,7 @@ export interface IOption {
   id: string;
   title: string;
 }
+
 export interface IAnswer {
   userId: string;
   questionId: string;
@@ -42,4 +43,31 @@ export enum QuestionType {
   SingleChoice,
   MultipleChoice,
   OpenAnswer,
+}
+
+export interface OptionData {
+  title: string;
+}
+
+export interface QuestionData {
+  question_info: {
+    title: string;
+    question_type: "SingleChoice" | "MultipleChoice" | "OpenAnswer";
+  };
+  option_data?: OptionData[];
+}
+
+export interface PollData {
+  poll_data: {
+    title: string;
+    author_id: number;
+    description: string;
+    number_of_vote: number;
+    creation_date: string;
+    end_date?: string | null;
+    is_anonymous: boolean;
+    is_private: boolean;
+  };
+
+  question_data: QuestionData[];
 }

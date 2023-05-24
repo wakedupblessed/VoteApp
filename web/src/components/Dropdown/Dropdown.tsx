@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowDown } from "react-bootstrap-icons";
 import styled from "styled-components";
+import { QuestionType } from "../../api/Polls/interfaces";
 
 export interface Option {
   id: string;
@@ -10,9 +11,10 @@ export interface Option {
 
 interface DropdownProps {
   options: Option[];
+  setSelectedOption: (option: QuestionType | null) => void;
 }
 
-const Dropdown = ({ options }: DropdownProps) => {
+const Dropdown = ({ options, setSelectedOption }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownTitle, setDropdownTitle] = useState<string>("Question type");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -25,6 +27,7 @@ const Dropdown = ({ options }: DropdownProps) => {
     option.onClick();
     setDropdownTitle(option.value);
     setIsOpen(false);
+    setSelectedOption(QuestionType[option.id as keyof typeof QuestionType]);
   };
 
   const handleOutsideClick = (event: MouseEvent) => {
@@ -92,6 +95,7 @@ const DropdownButton = styled.button`
 
 const DropdownMenu = styled.ul`
   position: absolute;
+  z-index: 100;
   top: 100%;
   left: 0;
   width: 100%;

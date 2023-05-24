@@ -1,11 +1,14 @@
-import React from "react";
 import styled from "styled-components";
+import { Provider } from "react-redux";
+import { store } from "../../store/index";
 import PollCreate from "../../components/PollCreate/PollCreate";
 
 const CreatePollPage = () => {
   return (
     <PollCreateArea>
-      <PollCreate />
+      <Provider store={store}>
+        <PollCreate />
+      </Provider>
     </PollCreateArea>
   );
 };
@@ -17,17 +20,6 @@ const PollCreateArea = styled.div`
   margin-top: 30px;
   flex-direction: column;
   gap: 20px;
-`;
-
-const CheckBoxContainer = styled.div`
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-`;
-
-const CheckBoxWithInputArea = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 
 export default CreatePollPage;
