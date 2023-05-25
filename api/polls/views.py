@@ -38,6 +38,15 @@ def get_all_preview(request):
 
 
 @api_view(['GET'])
+def get_all_available_preview(request, id):
+    polls = Poll.objects.filter(responders=id).all()
+    data = []
+    for poll in polls:
+        data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data, "endDate": poll.end_date})
+    return Response(data)
+
+
+@api_view(['GET'])
 def get_preview(request, id):
     poll = Poll.objects.get(id=id)
     return Response(data={"id": id, "title": poll.title, "author": ShortUserSerializer(poll.author).data, "endDate": poll.end_date})
@@ -122,7 +131,7 @@ def vote(request):
         if answer.is_valid():
             if Answer.objects.filter(question=answer.validated_data["question"],
                                   user=answer.validated_data["user"]).exists():
-                return Response(data=f"user has voted", status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=f"user has already voted", status=status.HTTP_400_BAD_REQUEST)
             answer.validated_data["id"] = uuid.uuid4().hex
             answers.append(answer)
         else:
@@ -140,7 +149,7 @@ def vote(request):
     poll_id = set_poll_ids.pop()
     available_question_ids = [available_question.id for available_question in Question.objects.filter(poll=poll_id).all()]
     questions_ids = [answer.validated_data["question"].id for answer in answers]
-    if len(available_question_ids) != len(answers) or [id for id in questions_ids if id not in available_question_ids]:
+    if len(available_question_ids) != len(answers) or [id for id in available_question_ids if id not in questions_ids]:
         return Response("invalid questions query", status=status.HTTP_400_BAD_REQUEST)
 
     # matching: option - question - answer
