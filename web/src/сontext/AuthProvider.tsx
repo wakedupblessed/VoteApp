@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import AuthContext, { IAuthContext } from "./AuthContext";
 import { AuthApi, AuthTokens } from "../api/Auth/api";
+import { User } from "../api/Auth/interfaces";
 
 interface Props {
   children: ReactNode;
@@ -12,7 +13,7 @@ interface Props {
 const AUTH_TOKENS = `authTokens`;
 
 export const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [authTokens, setAuthTokens] = useState<AuthTokens | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();

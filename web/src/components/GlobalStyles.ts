@@ -51,6 +51,21 @@ export const StyledInput = styled.input`
   border-top: 0;
   border-left: 0;
   border-right: 0;
+  border-color: #ccc;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const StyledTextArea = styled.input`
+  height: 50px;
+  width: auto;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
 
   &:focus {
     outline: none;
@@ -64,19 +79,73 @@ export const StyledButton = styled.button`
   font-size: 14px;
   font-weight: normal;
   line-height: 16px;
-  color: #000;
-  background-color: #fff;
-  border-color: #000;
+  color: #fff;
+  background-color: #000;
+  border: 1px solid black;
 
   &:hover {
+    outline: none;
     cursor: pointer;
-    background-color: #000;
-    color: #fff;
+    background-color: #fff;
+    color: #000;
   }
 
   &:active {
-    background-color: #000;
-    color: #fff;
+    outline: none;
+    background-color: #fff;
+    color: #000;
+  }
+`;
+
+export const CheckBoxWithInputArea = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const PollElementContainer = styled.div`
+  width: 600px;
+  padding: 20px;
+  padding-bottom: 30px; /* Adjust this as needed */
+  border-radius: 3px;
+  flex-direction: column;
+  display: flex;
+  gap: 15px;
+  position: relative;
+  background: white;
+  box-sizing: border-box;
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    box-sizing: border-box;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 3px; // container's border-radius + border-width
+  }
+
+  &:before {
+    z-index: -1;
+    background: #ccc; // your default border color
+  }
+
+  &:after {
+    z-index: -2;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 600% 600%;
+    animation: ${gradientAnimation} 20s ease infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover:before {
+    opacity: 0;
+  }
+
+  &:hover:after {
+    opacity: 1;
   }
 `;
 
