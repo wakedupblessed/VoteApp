@@ -105,12 +105,13 @@ export const CheckBoxWithInputArea = styled.div`
 export const PollElementContainer = styled.div`
   width: 600px;
   padding: 20px;
+  padding-bottom: 30px; /* Adjust this as needed */
   border-radius: 3px;
   flex-direction: column;
   display: flex;
   gap: 15px;
   position: relative;
-  background: white; // your desired non-animated background color
+  background: white;
   box-sizing: border-box;
 
   &:before,

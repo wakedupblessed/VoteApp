@@ -12,14 +12,20 @@ export interface Option {
 interface DropdownProps {
   options: Option[];
   setSelectedOption: (option: QuestionType | null) => void;
+  setIsHovered: (value: boolean) => void;
 }
 
-const Dropdown = ({ options, setSelectedOption }: DropdownProps) => {
+const Dropdown = ({
+  options,
+  setSelectedOption,
+  setIsHovered,
+}: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownTitle, setDropdownTitle] = useState<string>("Question type");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleDropdownToggle = () => {
+  const handleDropdownToggle = (event: React.MouseEvent) => {
+    event.stopPropagation();
     setIsOpen(!isOpen);
   };
 
@@ -48,7 +54,11 @@ const Dropdown = ({ options, setSelectedOption }: DropdownProps) => {
   }, []);
 
   return (
-    <DropdownContainer ref={dropdownRef}>
+    <DropdownContainer
+      ref={dropdownRef}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <DropdownButton onClick={handleDropdownToggle}>
         {dropdownTitle}
         <ArrowDown />
@@ -58,7 +68,10 @@ const Dropdown = ({ options, setSelectedOption }: DropdownProps) => {
           {options.map((option) => (
             <DropdownMenuItem
               key={option.id}
-              onClick={() => handleOptionClick(option)}
+              onClick={(event: React.MouseEvent) => {
+                event.stopPropagation();
+                handleOptionClick(option);
+              }}
             >
               {option.value}
             </DropdownMenuItem>
