@@ -1,8 +1,8 @@
 import React, { useReducer } from "react";
 import styled from "styled-components";
 
-import { IQuestion, QuestionType } from "../../api/Polls/interfaces";
-import { IQuestionsContainer, CustomQuestionProps } from "./QuestionInterfaces";
+import { QuestionDTO } from "../../api/Polls/interfaces/polls";
+import { IQuestionsContainer, CustomQuestionProps } from "./interfaces";
 import SingleChoiceQuestion from "./SingleChoiceQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import OpenAnswerQuestion from "./OpenAnswerQuestion";
@@ -22,26 +22,24 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    Object.entries(questionStates).forEach((element) => {
-      console.log(element[0], " ", element[1]);
-    });
+    console.log(questionStates);
   };
 
   const updateQuestionState = (id: string, value: any) => {
     dispatch({ payload: { id, value } });
   };
 
-  const renderQuestion = (question: IQuestion, index: number) => {
+  const renderQuestion = (question: QuestionDTO, index: number) => {
     let QuestionComponent: React.ComponentType<CustomQuestionProps>;
 
-    switch (question.type) {
-      case QuestionType.SingleChoice:
+    switch (question.question_info.question_type) {
+      case "SingleChoice":
         QuestionComponent = SingleChoiceQuestion;
         break;
-      case QuestionType.MultipleChoice:
+      case "MultipleChoice":
         QuestionComponent = MultipleChoiceQuestion;
         break;
-      case QuestionType.OpenAnswer:
+      case "OpenAnswer":
         QuestionComponent = OpenAnswerQuestion;
         break;
       default:
@@ -50,9 +48,8 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
 
     return (
       <QuestionComponent
-        key={question.id}
+        key={question.question_info.id}
         data={question}
-        index={index + 1}
         onStateChange={updateQuestionState}
       />
     );
@@ -76,6 +73,6 @@ const QuestionContainerStyled = styled.div`
   & > form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
 `;

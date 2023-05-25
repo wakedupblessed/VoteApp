@@ -1,18 +1,18 @@
+import React from "react";
 import styled from "styled-components";
 
 import CustomLink from "../CustomLink/CustomLink";
 import { gradientAnimation } from "../GlobalStyles";
-import { useContext } from "react";
-import AuthContext from "../../сontext/AuthContext";
+import useAuthContext from "../../сontext/hooks";
 
 export const Header = () => {
-  const { user, logoutUser } = useContext(AuthContext)!;
+  const { user, logoutUser } = useAuthContext();
 
   return (
     <HeaderArea>
       <NavLinkContainer>
         <CustomLink label='Home' route='/' />
-        <CustomLink label='Create' route='/polls/create' />
+        {user && <CustomLink label='Create' route='/polls/create' />}
       </NavLinkContainer>
       <NavAccountLinks>
         {user ? (
@@ -57,5 +57,5 @@ const StyledUserName = styled.div`
   display: inline-block;
   color: #000;
   padding: 0 40px 0 0;
-  font-size: 24px;
+  font-size: 26px;
 `;

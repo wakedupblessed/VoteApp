@@ -1,131 +1,52 @@
-import { ApiResponse, QuestionType } from "./interfaces";
+import { QuestionType } from "./interfaces/polls";
+import { PreviewResponse } from "./interfaces/responces";
 
-const FAKE_DATA: ApiResponse = {
+export const FAKE_PREVIEW_DATA: PreviewResponse = {
   items: [
     {
-      id: "1",
-      title: "Survey on learning on the Action Centers platform",
-      description:
-        "poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description poll description ",
-      author: "Sokyrka Kyrylo",
-      isAnonymous: false,
-      numberOfVote: 5,
-      creationDate: new Date(""),
-      endDate: new Date(""),
-      responders: null,
-      question: [
-        {
-          id: "chmonia",
-          title: "Question title long 22222222222222",
-          type: QuestionType.OpenAnswer,
-          options: [
-            {
-              id: "chmo",
-              title: "Red",
-            },
-            {
-              id: "chmo2",
-              title: "Green",
-            },
-            {
-              id: "chmo3",
-              title: "Yellow",
-            },
-          ],
-        },
-        {
-          id: "favfruit",
-          title: "What is your favorite fruit?",
-          type: QuestionType.SingleChoice,
-          options: [
-            {
-              id: "apple-id",
-              title: "Apple",
-            },
-            {
-              id: "banana",
-              title: "Banana",
-            },
-            {
-              id: "orange",
-              title: "Orange",
-            },
-            {
-              id: "strawberry",
-              title: "Strawberry",
-            },
-          ],
-        },
-      ],
+      id: "5ff373ac83d54f5a9d68c573dbfdde8a",
+      title: "second poll",
+      author: {
+        id: 1,
+        username: "kyrylo.sokyrka",
+      },
+      endDate: "2023-06-15T22:22:22Z",
     },
     {
-      id: "2",
-      title: "Short poll title",
-      description: "a brief poll description",
-      author: "John Smith",
-      isAnonymous: true,
-      numberOfVote: 0,
-      creationDate: new Date(),
-      endDate: new Date(),
-      responders: null,
-      question: [
-        {
-          id: "gender",
-          title: "What is your gender?",
-          type: QuestionType.MultipleChoice,
-          options: [
-            {
-              id: "male",
-              title: "Male",
-            },
-            {
-              id: "female",
-              title: "Female",
-            },
-            {
-              id: "nonbinary",
-              title: "Non-binary",
-            },
-            {
-              id: "other",
-              title: "Other",
-            },
-          ],
-        },
-        {
-          id: "programming",
-          title: "What programming languages do you know?",
-          type: QuestionType.SingleChoice,
-          options: [
-            {
-              id: "python",
-              title: "Python",
-            },
-            {
-              id: "java",
-              title: "Java",
-            },
-            {
-              id: "javascript",
-              title: "JavaScript",
-            },
-            {
-              id: "c++",
-              title: "C++",
-            },
-            {
-              id: "ruby",
-              title: "Ruby",
-            },
-            {
-              id: "other",
-              title: "Other",
-            },
-          ],
-        },
-      ],
+      id: "9cc27c78bc9c42b79e117a7e6ed0cdd8",
+      title: "second poll",
+      author: {
+        id: 1,
+        username: "kyrylo.sokyrka",
+      },
+      endDate: "2023-06-15T22:22:22Z",
+    },
+    {
+      id: "0eb80cac88ac42bb9ebb49a6598f1d45",
+      title: "second poll",
+      author: {
+        id: 1,
+        username: "kyrylo.sokyrka",
+      },
+      endDate: "2023-06-15T22:22:22Z",
+    },
+    {
+      id: "fe7c292bf806406fa509e593419fdbe4",
+      title: "second poll",
+      author: {
+        id: 1,
+        username: "kyrylo.sokyrka",
+      },
+      endDate: "2023-06-15T22:22:22Z",
+    },
+    {
+      id: "438e7ae9cb3c4978946cca3127f8f64f",
+      title: "second poll",
+      author: {
+        id: 1,
+        username: "kyrylo.sokyrka",
+      },
+      endDate: "2023-06-15T22:22:22Z",
     },
   ],
 };
-
-export default FAKE_DATA;

@@ -1,4 +1,4 @@
-import { QuestionType } from "../api/Polls/interfaces";
+import { QuestionType } from "../api/Polls/interfaces/polls";
 
 export const formatOption = (option: QuestionType): string => {
   switch (option) {

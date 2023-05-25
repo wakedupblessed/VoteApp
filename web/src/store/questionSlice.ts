@@ -1,14 +1,10 @@
-import { Action, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import {
-  QuestionDataDTO,
-  OptionDataUpsert,
-  OptionDataDelete,
-} from "./interfaces";
+import { QuestionDTO, OptionUpsert, OptionDelete } from "./interfaces";
 
 export interface RootState {
   questions: {
-    questionsData: QuestionDataDTO[];
+    questionsData: QuestionDTO[];
   };
 }
 
@@ -16,14 +12,14 @@ export const questionSlice = createSlice({
   name: "questions",
   initialState: { questionsData: [] } as RootState["questions"],
   reducers: {
-    create: (state, action: PayloadAction<QuestionDataDTO>) => {
+    create: (state, action: PayloadAction<QuestionDTO>) => {
       state.questionsData.push({
         ...action.payload,
         option_data: [],
       });
     },
 
-    update: (state, action: PayloadAction<QuestionDataDTO>) => {
+    update: (state, action: PayloadAction<QuestionDTO>) => {
       const updatedQuestion = action.payload;
       const indexToUpdate = updatedQuestion.question_info.index;
 
@@ -44,7 +40,7 @@ export const questionSlice = createSlice({
       );
     },
 
-    addQuestionOption: (state, action: PayloadAction<OptionDataUpsert>) => {
+    addQuestionOption: (state, action: PayloadAction<OptionUpsert>) => {
       const { questionIndex, title, optionIndex } = action.payload;
       const question = state.questionsData.find(
         (q) => q.question_info.index === questionIndex
@@ -54,7 +50,7 @@ export const questionSlice = createSlice({
       }
     },
 
-    updateQuestionOption: (state, action: PayloadAction<OptionDataUpsert>) => {
+    updateQuestionOption: (state, action: PayloadAction<OptionUpsert>) => {
       const { questionIndex, optionIndex, title } = action.payload;
       const question = state.questionsData.find(
         (q) => q.question_info.index === questionIndex
@@ -64,7 +60,7 @@ export const questionSlice = createSlice({
       }
     },
 
-    deleteQuestionOption: (state, action: PayloadAction<OptionDataDelete>) => {
+    deleteQuestionOption: (state, action: PayloadAction<OptionDelete>) => {
       const { questionIndex, optionIndex } = action.payload;
       const question = state.questionsData.find(
         (q) => q.question_info.index === questionIndex

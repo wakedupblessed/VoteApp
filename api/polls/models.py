@@ -17,12 +17,6 @@ class Poll(models.Model):
     responders = models.ManyToManyField(User, related_name='responded_polls')
 
 
-class PrivatePollRespondents(models.Model):
-    id = models.CharField(primary_key=True, max_length=20)
-    pollees = models.ManyToManyField(User)
-    poll = models.ForeignKey(Poll, on_delete=models.RESTRICT)
-
-
 class QuestionType(Enum):
     SINGLE_OPTION = 'SingleChoice'
     MULTIPLE_OPTION = 'MultipleChoice'

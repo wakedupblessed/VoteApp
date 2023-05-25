@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TOKEN_URL, REFRESH_URL, REGISTER_URL } from "./constants";
+import { TOKEN_URL, REFRESH_URL, REGISTER_URL } from "./urls";
 
 export interface AuthTokens {
   access: string;

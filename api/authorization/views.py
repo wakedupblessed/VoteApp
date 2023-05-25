@@ -3,8 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
 from rest_framework.views import APIView
-
 from .serializers import CustomTokenObtainPairSerializer, RegisterSerializer
+from polls.jsonProcessors import ShortUserSerializer
+from django.contrib.auth.models import User
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -22,11 +23,10 @@ class RegisterView(APIView):
 
 
 @api_view(['GET'])
-def getRoutes(request):
-    routes = [
-        "/auth/register/",
-        "/auth/token/",
-        "/auth/token/refresh/"
-    ]
-
-    return Response(routes)
+def get_all_users(request):
+    users = []
+    for user in User.objects.all():
+        users.append(ShortUserSerializer(user).data)
+    data = {}
+    data["users"] = [users]
+    return Response(data, status=status.HTTP_200_OK)

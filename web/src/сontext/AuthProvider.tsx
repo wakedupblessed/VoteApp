@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext, { IAuthContext } from "./AuthContext";
 import { AuthApi, AuthTokens } from "../api/Auth/api";
 import { User } from "../api/Auth/interfaces";
+import { copyFileSync } from "fs";
 
 interface Props {
   children: ReactNode;
@@ -19,7 +20,7 @@ export const AuthProvider = ({ children }: Props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const tokens = localStorage.getItem("authTokens");
+    const tokens = localStorage.getItem(AUTH_TOKENS);
     if (tokens) {
       setAuthTokens(JSON.parse(tokens));
       setUser(jwt_decode(tokens));
@@ -51,15 +52,13 @@ export const AuthProvider = ({ children }: Props) => {
   const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const username = event.currentTarget.elements.email.value;
+    const username = event.currentTarget.elements.username.value;
     const password = event.currentTarget.elements.password.value;
 
     const data = await AuthApi.fetchToken(username, password);
 
     if (data) {
-      setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem(AUTH_TOKENS, JSON.stringify(data));
+      updateAuthStates(data);
       navigate("/");
     }
   };
@@ -77,7 +76,6 @@ export const AuthProvider = ({ children }: Props) => {
 
       if (data) {
         updateAuthStates(data);
-        navigate("/");
       } else {
         logoutUser();
       }
@@ -88,12 +86,21 @@ export const AuthProvider = ({ children }: Props) => {
     }
   };
 
+  const contextData: IAuthContext = {
+    user,
+    authTokens,
+    registerUser,
+    loginUser,
+    logoutUser,
+    refreshToken,
+  };
+
   useEffect(() => {
     if (loading) {
       refreshToken();
     }
 
-    const fiveMinutes = 60 * 100 * 5;
+    const fiveMinutes = 1000 * 60 * 5;
 
     const interval = setInterval(() => {
       if (authTokens) {
@@ -105,14 +112,6 @@ export const AuthProvider = ({ children }: Props) => {
       clearInterval(interval);
     };
   }, [authTokens, loading]);
-
-  const contextData: IAuthContext = {
-    user,
-    registerUser,
-    loginUser,
-    logoutUser,
-    refreshToken,
-  };
 
   return (
     <AuthContext.Provider value={contextData}>
