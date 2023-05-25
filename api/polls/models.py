@@ -11,7 +11,7 @@ class Poll(models.Model):
     description = models.CharField(max_length=300)
     number_of_vote = models.IntegerField(default=0)
     creation_date = models.DateTimeField(default=datetime.today())
-    end_date = models.DateTimeField(default=datetime.today() + timedelta(days=1))
+    end_date = models.DateTimeField(default=datetime.today() + timedelta(days=1), null=True)
     is_anonymous = models.BooleanField(default=False)
     is_private = models.BooleanField(default=False)
     responders = models.ManyToManyField(User, related_name='responded_polls')

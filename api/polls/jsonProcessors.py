@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Poll, Question, Option, QuestionType, Answer
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -49,8 +50,8 @@ class PollDeserializer(serializers.Serializer):
     )
     description = serializers.CharField(max_length=300)
     number_of_vote = serializers.IntegerField(default=0)
-    creation_date = serializers.DateTimeField()
-    end_date = serializers.DateTimeField()
+    creation_date = serializers.DateTimeField(default=datetime.today())
+    end_date = serializers.DateTimeField(allow_null=True)
     is_anonymous = serializers.BooleanField(default=False)
     is_private = serializers.BooleanField(default=False)
     responders = serializers.PrimaryKeyRelatedField(
