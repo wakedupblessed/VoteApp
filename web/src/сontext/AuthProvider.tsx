@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import AuthContext, { IAuthContext } from "./AuthContext";
 import { AuthApi, AuthTokens } from "../api/Auth/api";
 import { User } from "../api/Auth/interfaces";
-import { copyFileSync } from "fs";
 
 interface Props {
   children: ReactNode;

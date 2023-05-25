@@ -11,7 +11,7 @@ const SingleChoiceQuestion = (props: CustomQuestionProps) => {
   const handleAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newAnswer = event.target.value;
     setAnswer(newAnswer);
-    onStateChange(data.question_info.id, newAnswer);
+    // onStateChange(data.question_info.id, newAnswer);
   };
 
   return (

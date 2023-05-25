@@ -2,19 +2,23 @@ import React, { useReducer } from "react";
 import styled from "styled-components";
 
 import { QuestionDTO } from "../../api/Polls/interfaces/polls";
-import { IQuestionsContainer, CustomQuestionProps } from "./interfaces";
+import {
+  IQuestionsContainer,
+  CustomQuestionProps,
+  QuestionAnswer,
+} from "./interfaces";
 import SingleChoiceQuestion from "./SingleChoiceQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import OpenAnswerQuestion from "./OpenAnswerQuestion";
 import { StyledButton } from "../GlobalStyles";
 
 const questionStateReducer = (
-  state: Record<string, string>,
+  state: Record<string, QuestionAnswer>,
   action: {
-    payload: { id: string; value: string };
+    payload: QuestionAnswer;
   }
 ) => {
-  return { ...state, [action.payload.id]: action.payload.value };
+  return { ...state, [action.payload.question_id]: action.payload };
 };
 
 export const QuestionsContainer = (props: IQuestionsContainer) => {
@@ -25,11 +29,11 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
     console.log(questionStates);
   };
 
-  const updateQuestionState = (id: string, value: any) => {
-    dispatch({ payload: { id, value } });
+  const updateQuestionState = (question: QuestionAnswer) => {
+    dispatch({ payload: question });
   };
 
-  const renderQuestion = (question: QuestionDTO, index: number) => {
+  const renderQuestion = (question: QuestionDTO) => {
     let QuestionComponent: React.ComponentType<CustomQuestionProps>;
 
     switch (question.question_info.question_type) {

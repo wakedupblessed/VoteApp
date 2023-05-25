@@ -7,11 +7,18 @@ export interface BaseQuestionProps {
   children: ReactNode;
 }
 
+export interface QuestionAnswer {
+  user_id: number;
+  question_id: string;
+  single_option_id: string | null;
+  multiple_options: string[];
+  open_answer: string | null;
+}
+
 export interface CustomQuestionProps {
   key: string;
   data: QuestionDTO;
-  // index: number;
-  onStateChange: (id: string, value: any) => void;
+  onStateChange: (question: QuestionAnswer) => void;
 }
 
 export interface IQuestionsContainer {
