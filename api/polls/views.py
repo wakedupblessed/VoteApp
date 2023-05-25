@@ -167,3 +167,54 @@ def vote(request):
     return Response("voted", status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+def get_vote_statistic(request, poll_id, user_id):
+    poll = Poll.objects.get(id=poll_id)
+    serialized_data = {"poll_data": PollSerializer(poll).data}
+    serialized_data["poll_data"]['author'] = ShortUserSerializer(poll.author).data
+    serialized_data["poll_data"]['responders'] = [ShortUserSerializer(responder).data for responder in poll.responders.all()]
+
+    try:
+        question_data = []
+        for question in Question.objects.filter(poll=poll):
+            if question.question_type == QuestionType.OPEN_ANSWER.value:
+                answer = Answer.objects.filter(question=question, user_id=user_id).get()
+                question_data.append({
+                    "question_info": QuestionSerializer(question).data,
+                    "answer": answer.open_answer
+                })
+            elif question.question_type == QuestionType.SINGLE_OPTION.value:
+                option_data = []
+                for option in Option.objects.filter(question=question):
+                    option_info = OptionSerializer(option).data
+                    option_info["votes_percent"] = round(100 * Answer.objects.filter(question=question, single_option=option).count() / Answer.objects.filter(question=question).count())
+                    option_data.append(option_info)
+                question_data.append({
+                    "question_info": QuestionSerializer(question).data,
+                    "option_data": option_data
+                })
+            else:
+                option_data = []
+                for option in Option.objects.filter(question=question):
+                    option_info = OptionSerializer(option).data
+                    count_vote_current_option = 0
+                    count_vote_all_option = 0
+                    answer = Answer.objects.get(question=question)
+                    for item in answer.multiple_options.all():
+                        count_vote_all_option += 1
+                        if item == option:
+                            count_vote_current_option += 1
+                    option_info["votes_percent"] = round(100 * count_vote_current_option / count_vote_all_option)
+                    option_data.append(option_info)
+                question_data.append({
+                    "question_info": QuestionSerializer(question).data,
+                    "option_data": option_data
+                })
+    except ZeroDivisionError:
+        return Response("this poll has no responses", status=status.HTTP_400_BAD_REQUEST)
+
+    serialized_data['question_data'] = question_data
+    return Response(serialized_data, status=status.HTTP_200_OK)
+
+
+
