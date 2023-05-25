@@ -1,57 +1,118 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
+import Select, { ValueType, ActionMeta } from "react-select";
+import { User } from "../../api/Auth/interfaces";
 import Fuse from "fuse.js";
 
-const DATA = ["ivan", "ivanessa", "kyrylo", "syrylo", "mamluik"];
+const DATA: User[] = [
+  {
+    id: 1,
+    username: "johndoe",
+    email: "johndoe@example.com",
+  },
+  {
+    id: 2,
+    username: "janedoe",
+    email: "janedoe@example.com",
+  },
+  {
+    id: 3,
+    username: "alice",
+    email: "alice@example.com",
+  },
+  {
+    id: 4,
+    username: "bob",
+    email: "bob@example.com",
+  },
+  {
+    id: 5,
+    username: "charlie",
+    email: "charlie@example.com",
+  },
+];
+
+interface OptionType {
+  label: string;
+  value: User;
+}
+
+const createOption = (user: User): OptionType => ({
+  label: user.username,
+  value: user,
+});
 
 interface AllowedUsersSelectorProps {
-  users?: string[];
-  updateUsersList: (updatedPolles: string[]) => void;
+  users: User[];
+  updateUsersList: (updatedUsers: User[]) => void;
 }
 
 const AllowedUsersSelector = ({
   users,
   updateUsersList,
 }: AllowedUsersSelectorProps) => {
-  const [queryInput, setQueryInput] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState<string[]>(
-    DATA.map((item) => item)
-  );
+  const [inputValue, setInputValue] = useState<string>("");
+  const [options, setOptions] = useState<OptionType[]>(DATA.map(createOption));
 
-  const options = {
+  const fuseOptions = {
     includeScore: true,
     threshold: 0.6,
   };
 
-  const fuse = new Fuse(DATA, options);
+  const fuse = new Fuse(DATA, fuseOptions);
 
   useEffect(() => {
-    if (queryInput.length > 2) {
-      const result = fuse.search(queryInput).map(({ item }) => item);
-      setFilteredOptions(result);
+    if (inputValue.length > 2) {
+      const result = fuse
+        .search(inputValue)
+        .map(({ item }) => createOption(item));
+      setOptions(result);
+    } else {
+      setOptions(DATA.map(createOption));
     }
-  }, [queryInput]);
+  }, [inputValue]);
 
-  const handleOptionSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateUsersList([...users, e.target.value]);
-    setQueryInput("");
+  const handleInputChange = (inputValue: string) => {
+    setInputValue(inputValue);
+  };
+
+  const handleChange = (
+    selectedOption: ValueType<OptionType>,
+    actionMeta: ActionMeta<OptionType>
+  ) => {
+    if (actionMeta.action === "select-option") {
+      const selectedValue = (selectedOption as OptionType).value;
+      if (!users.includes(selectedValue)) {
+        updateUsersList([...users, selectedValue]);
+      }
+      setInputValue("");
+    }
+  };
+
+  const customStyles = {
+    control: provided => ({
+      ...provided,
+      borderColor: "#ddd",
+      boxShadow: null,
+      "&:hover": {
+        borderColor: "#ddd",
+      },
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isFocused ? "#e2e2e2" : null,
+    }),
   };
 
   return (
-    <>
-      <input
-        type='text'
-        onChange={(e) => {
-          setQueryInput(e.target.value);
-        }}
-      />
-      <select onChange={handleOptionSelection}>
-        {filteredOptions.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </>
+    <Select
+      isSearchable
+      isClearable
+      onInputChange={handleInputChange}
+      onChange={handleChange}
+      options={options}
+      value={createOption(inputValue)}
+      styles={customStyles}
+    />
   );
 };
 

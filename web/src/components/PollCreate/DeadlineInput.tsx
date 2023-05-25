@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import styled from "styled-components";
+
 import { CheckBoxWithInputArea } from "../../components/GlobalStyles";
 import CustomCheckBox from "../CustomCheckBox/CustomCheckBox";
 
@@ -14,19 +16,35 @@ const DeadlineInput = ({ onChange }: DeadLineInputProps) => {
   };
 
   return (
-    <CheckBoxWithInputArea>
+    <DateCheckBoxWithInputArea>
       <CustomCheckBox
-        id='deadline'
-        label='Poll has deadline'
+        id="deadline"
+        label="Poll has deadline"
         onChange={setDeadline}
       />
-      {deadline && (
-        <>
-          <input type='date' onChange={handleDateChange} />
-        </>
-      )}
-    </CheckBoxWithInputArea>
+      {deadline && <StyledDateInput type="date" onChange={handleDateChange} />}
+    </DateCheckBoxWithInputArea>
   );
 };
+
+const StyledDateInput = styled.input`
+  width: 200px;
+  font-size: 14px;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-color: #ccc;
+
+  &:focus {
+    outline: none;
+  }
+  flex-grow: 1;
+`;
+
+const DateCheckBoxWithInputArea = styled(CheckBoxWithInputArea)`
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+`;
 
 export default DeadlineInput;

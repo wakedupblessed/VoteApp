@@ -1,10 +1,14 @@
 import { Action, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { QuestionData, OptionDataUpsert, OptionDataDelete } from "./interfaces";
+import {
+  QuestionDataDTO,
+  OptionDataUpsert,
+  OptionDataDelete,
+} from "./interfaces";
 
 export interface RootState {
   questions: {
-    questionsData: QuestionData[];
+    questionsData: QuestionDataDTO[];
   };
 }
 
@@ -12,18 +16,18 @@ export const questionSlice = createSlice({
   name: "questions",
   initialState: { questionsData: [] } as RootState["questions"],
   reducers: {
-    create: (state, action: PayloadAction<QuestionData>) => {
+    create: (state, action: PayloadAction<QuestionDataDTO>) => {
       state.questionsData.push({
         ...action.payload,
         option_data: [],
       });
     },
 
-    update: (state, action: PayloadAction<QuestionData>) => {
+    update: (state, action: PayloadAction<QuestionDataDTO>) => {
       const updatedQuestion = action.payload;
       const indexToUpdate = updatedQuestion.question_info.index;
 
-      state.questionsData = state.questionsData.map((question) => {
+      state.questionsData = state.questionsData.map(question => {
         if (question.question_info.index === indexToUpdate) {
           return {
             question_info: updatedQuestion.question_info,
@@ -37,7 +41,7 @@ export const questionSlice = createSlice({
     addQuestionOption: (state, action: PayloadAction<OptionDataUpsert>) => {
       const { questionIndex, title, optionIndex } = action.payload;
       const question = state.questionsData.find(
-        (q) => q.question_info.index === questionIndex
+        q => q.question_info.index === questionIndex
       );
       if (question) {
         question.option_data!.push({ questionIndex, title, optionIndex });
@@ -47,7 +51,7 @@ export const questionSlice = createSlice({
     updateQuestionOption: (state, action: PayloadAction<OptionDataUpsert>) => {
       const { questionIndex, optionIndex, title } = action.payload;
       const question = state.questionsData.find(
-        (q) => q.question_info.index === questionIndex
+        q => q.question_info.index === questionIndex
       );
       if (question && question.option_data![optionIndex]) {
         question.option_data![optionIndex].title = title;
@@ -57,7 +61,7 @@ export const questionSlice = createSlice({
     deleteQuestionOption: (state, action: PayloadAction<OptionDataDelete>) => {
       const { questionIndex, optionIndex } = action.payload;
       const question = state.questionsData.find(
-        (q) => q.question_info.index === questionIndex
+        q => q.question_info.index === questionIndex
       );
       if (question && question.option_data![optionIndex]) {
         question.option_data!.splice(optionIndex, 1);

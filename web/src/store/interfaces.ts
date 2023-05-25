@@ -2,7 +2,7 @@ export interface OptionData {
   title: string;
 }
 
-export interface QuestionData {
+export interface QuestionDataDTO {
   question_info: {
     index: number;
     title: string;

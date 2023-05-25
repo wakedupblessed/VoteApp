@@ -105,11 +105,47 @@ export const CheckBoxWithInputArea = styled.div`
 export const PollElementContainer = styled.div`
   width: 600px;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 3px;
   flex-direction: column;
   display: flex;
   gap: 15px;
+  position: relative;
+  background: white; // your desired non-animated background color
+  box-sizing: border-box;
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    box-sizing: border-box;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 3px; // container's border-radius + border-width
+  }
+
+  &:before {
+    z-index: -1;
+    background: #ccc; // your default border color
+  }
+
+  &:after {
+    z-index: -2;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 600% 600%;
+    animation: ${gradientAnimation} 20s ease infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover:before {
+    opacity: 0;
+  }
+
+  &:hover:after {
+    opacity: 1;
+  }
 `;
 
 export default GlobalStyles;

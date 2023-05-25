@@ -67,6 +67,7 @@ export interface PollData {
     end_date?: string | null;
     is_anonymous: boolean;
     is_private: boolean;
+    responders?: number[] | null;
   };
 
   question_data: QuestionData[];

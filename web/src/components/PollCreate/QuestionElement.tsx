@@ -3,9 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { debounce } from "lodash";
 
-import { PollElementContainer } from "../GlobalStyles";
 import { formatOption } from "../../utils/OptionsFormater";
-import { StyledInput } from "../GlobalStyles";
+import { StyledInput, PollElementContainer } from "../GlobalStyles";
 import Dropdown from "../Dropdown/Dropdown";
 import { QuestionType } from "../../api/Polls/interfaces";
 import SelectElement from "../CreateQuestions/SelectElement";
@@ -23,19 +22,19 @@ const QuestionElement = ({ index }: QuestionElementProps) => {
     null
   );
 
-  const questionTypeKeys = Object.keys(QuestionType).filter((key) =>
+  const questionTypeKeys = Object.keys(QuestionType).filter(key =>
     isNaN(Number(key))
   ) as (keyof typeof QuestionType)[];
 
   const options = useMemo(() => {
     return questionTypeKeys
-      .map((key) => ({
+      .map(key => ({
         id: key,
         value: formatOption(QuestionType[key as keyof typeof QuestionType]),
         onClick: () =>
           setSelectedOption(QuestionType[key as keyof typeof QuestionType]),
       }))
-      .filter((o) => o.value !== "");
+      .filter(o => o.value !== "");
   }, []);
 
   const dispatch = useDispatch();
@@ -69,9 +68,9 @@ const QuestionElement = ({ index }: QuestionElementProps) => {
     <PollElementContainer>
       <BaseSettings>
         <QuestionTitle
-          placeholder='Question title'
+          placeholder="Question title"
           value={questionTitle}
-          onChange={(e) => setQuestionTitle(e.target.value)}
+          onChange={e => setQuestionTitle(e.target.value)}
         />
         <Dropdown options={options} setSelectedOption={setSelectedOption} />
       </BaseSettings>
