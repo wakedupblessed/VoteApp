@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Trash3 as Trash } from "react-bootstrap-icons";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { debounce } from "lodash";
 
 import { formatOption } from "../../utils/OptionsFormater";
-import { StyledInput, PollElementContainer } from "../GlobalStyles";
+import { StyledInput, GradientContainer } from "../GlobalStyles";
 import Dropdown from "../Dropdown/Dropdown";
-import { QuestionType } from "../../api/Polls/interfaces";
+import { QuestionType } from "../../api/Polls/interfaces/polls";
 import SelectElement from "../CreateQuestions/SelectElement";
 import AnswerElement from "../CreateQuestions/AnswerElement";
 import { update, deleteQuestion, RootState } from "../../store/questionSlice";
@@ -142,7 +142,7 @@ const StyledTrash = styled(Trash)`
   cursor: pointer;
 `;
 
-const QuestionPollElementContainer = styled(PollElementContainer)`
+const QuestionPollElementContainer = styled(GradientContainer)`
   position: relative;
 `;
 

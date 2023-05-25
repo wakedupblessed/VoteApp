@@ -2,40 +2,36 @@ import { useParams } from "react-router";
 import { PollApi } from "../../api/Polls/api";
 import { Poll } from "../../components/Poll/Poll";
 import { useEffect, useState } from "react";
-import { IPoll } from "../../api/Polls/interfaces";
+import { PollDTO } from "../../api/Polls/interfaces/polls";
 import { useNavigate } from "react-router";
 
 export const PollDetail = () => {
-  const [poll, setPoll] = useState<IPoll | undefined>(undefined);
-
+  const [poll, setPoll] = useState<PollDTO | null>(null);
   const { pollId } = useParams();
   const navigate = useNavigate();
 
-  const getPoll = async (pollId: string | undefined) => {
-    if (!pollId) throw new Error("error");
-
-    const poll = await PollApi.get(pollId!, true);
-
-    if (!poll) {
-      throw new Error("error");
-    }
-
-    setPoll(poll);
-  };
-
-  const loadPoll = async () => {
+  const getPoll = async () => {
     try {
-      await getPoll(pollId!);
+      if (!pollId) {
+        throw new Error("Poll ID is not provided");
+      }
+
+      const poll = await PollApi.get(pollId);
+
+      if (!poll) {
+        throw new Error("Poll not found");
+      }
+
+      setPoll(poll);
     } catch (error) {
-      navigate("not-found");
+      console.log(error);
+      navigate("/not-found");
     }
   };
-
-  loadPoll();
 
   useEffect(() => {
-    loadPoll();
-  }, [pollId]);
+    getPoll();
+  }, [pollId, navigate]);
 
   return <>{poll && <Poll {...poll} />}</>;
 };

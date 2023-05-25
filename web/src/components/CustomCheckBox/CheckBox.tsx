@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { Square, Circle } from "react-bootstrap-icons";
-import { QuestionType } from "../../api/Polls/interfaces";
+import { QuestionType } from "../../api/Polls/interfaces/polls";
 
 export const Checkbox = ({
   type,

@@ -1,39 +1,37 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useCallback,
-  useRef,
-} from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { format, isValid } from "date-fns";
+import { format } from "date-fns";
 
 import {
   StyledButton,
   StyledInput,
   StyledTextArea,
-  PollElementContainer,
+  GradientContainer,
 } from "../../components/GlobalStyles";
 
 import CustomCheckBox from "../CustomCheckBox/CustomCheckBox";
 import DeadLineInput from "./DeadlineInput";
 
 import AllowedUsers from "../AllowedUsers/AllowedUsers";
-import AuthContext from "../../сontext/AuthContext";
-import { AuthProvider } from "../../сontext/AuthProvider";
+import useAuthContext from "../../сontext/hooks";
 
-import { PollData } from "../../api/Polls/interfaces";
 import { create, RootState } from "../../store/questionSlice";
-import { QuestionData } from "../../api/Polls/interfaces";
-import { QuestionDataDTO, OptionDataUpsert } from "../../store/interfaces";
+import {
+  PollDTO,
+  QuestionDTO,
+  OptionUpsert,
+  QuestionCreate,
+} from "../../store/interfaces";
 import QuestionElement from "./QuestionElement";
 
 const PollCreate = () => {
-  const initialState: PollData = {
+  const { user } = useAuthContext();
+
+  const initialState: PollDTO = {
     poll_data: {
       title: "",
-      author_id: 0,
+      author_id: user.id,
       description: "",
       number_of_vote: 0,
       creation_date: format(new Date(), "yyyy-MM-dd"),
@@ -53,7 +51,7 @@ const PollCreate = () => {
   );
 
   const updateFormState = (field: string, value: string | boolean | null) => {
-    setFormState(prevState => ({
+    setFormState((prevState) => ({
       ...prevState,
       poll_data: { ...prevState.poll_data, [field]: value },
     }));
@@ -69,38 +67,46 @@ const PollCreate = () => {
     );
   };
 
-  const createQuestionData = (question: QuestionDataDTO): QuestionData => {
-    const question_info = {
-      title: question.question_info.title,
-      question_type: question.question_info.question_type || "OpenAnswer",
-    };
+  const createOptionData = (option: OptionUpsert) => {
+    const { title } = option;
+    return { title };
+  };
 
-    if (question_info.question_type === "OpenAnswer") {
-      return {
-        question_info,
-      };
+  const createQuestionData = (question: QuestionDTO): QuestionCreate => {
+    const { title, question_type = "OpenAnswer" } = question.question_info;
+
+    const question_info = { title, question_type };
+
+    if (question_type === "OpenAnswer") {
+      return { question_info };
     }
 
-    const option_data = question.option_data?.map(
-      (option: OptionDataUpsert) => {
-        return {
-          title: option.title,
-        };
-      }
-    );
+    const option_data = question.option_data?.map(createOptionData);
 
-    return {
-      question_info,
-      option_data,
-    };
+    return { question_info, option_data };
+  };
+
+  const addEndDateIfNotPresent = (pollData: PollDTO) => {
+    if (!pollData.poll_data.end_date) {
+      let creationDate = new Date(pollData.poll_data.creation_date);
+      creationDate.setDate(creationDate.getDate() + 30);
+      pollData.poll_data.end_date = format(creationDate, "yyyy-MM-dd");
+    }
+  };
+
+  const addRespondersIfPrivate = (pollData: PollDTO) => {
+    if (pollData.poll_data.is_private) {
+      pollData.poll_data.responders = allowedUsers;
+    }
   };
 
   const createPoll = () => {
     var pollData = formState;
     pollData.question_data = questions.map(createQuestionData);
-    if (pollData.poll_data.is_private) {
-      pollData.poll_data.responders = allowedUsers;
-    }
+
+    addEndDateIfNotPresent(pollData);
+    addRespondersIfPrivate(pollData);
+
     console.log(pollData);
   };
 
@@ -115,48 +121,50 @@ const PollCreate = () => {
   return (
     <>
       <PollCreateContainer>
-        <PollElementContainer>
+        <GradientContainer>
           <PollTitleInput
-            id="poll-title"
-            name="title"
-            placeholder="Enter poll title"
+            id='poll-title'
+            name='title'
+            placeholder='Enter poll title'
             value={formState.poll_data.title}
             onChange={handleInputChange}
           />
           <StyledTextArea
-            id="poll-description"
-            name="description"
-            placeholder="Enter poll description"
+            id='poll-description'
+            name='description'
+            placeholder='Enter poll description'
             value={formState.poll_data.description}
             onChange={handleInputChange}
           />
           <DeadLineInput
-            onChange={date => updateFormState("end_date", date ? date : null)}
+            onChange={(date) => updateFormState("end_date", date ? date : null)}
           />
           <CustomCheckBox
-            id="anonymous"
-            label="Anonymous Voting"
-            onChange={checked => handleCheckBoxChange("is_anonymous", checked)}
+            id='anonymous'
+            label='Anonymous Voting'
+            onChange={(checked) =>
+              handleCheckBoxChange("is_anonymous", checked)
+            }
           />
           <CustomCheckBox
-            id="private"
-            label="Private Vote"
-            onChange={checked => handleCheckBoxChange("is_private", checked)}
+            id='private'
+            label='Private Vote'
+            onChange={(checked) => handleCheckBoxChange("is_private", checked)}
           />
-        </PollElementContainer>
+        </GradientContainer>
         {formState.poll_data.is_private && (
           <AllowedUsers setAllowedUsers={setAllowedUsers} />
         )}
-        {questions.map(question => (
+        {questions.map((question) => (
           <QuestionElement
             key={question.question_info.index}
             index={question.question_info.index}
           />
         ))}
-        <StyledButton onClick={addQuestion} type="button">
+        <StyledButton onClick={addQuestion} type='button'>
           Add Question
         </StyledButton>
-        <StyledButton type="button" onClick={createPoll}>
+        <StyledButton type='button' onClick={createPoll}>
           Create survey
         </StyledButton>
       </PollCreateContainer>

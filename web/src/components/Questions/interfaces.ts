@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { IQuestion } from "../../api/Polls/interfaces";
+import { QuestionDTO } from "../../api/Polls/interfaces/polls";
 
 export interface BaseQuestionProps {
   title: string;
@@ -10,11 +10,11 @@ export interface BaseQuestionProps {
 
 export interface CustomQuestionProps {
   key: string;
-  data: IQuestion;
+  data: QuestionDTO;
   index: number;
   onStateChange: (id: string, value: any) => void;
 }
 
 export interface IQuestionsContainer {
-  questions: IQuestion[];
+  questions: QuestionDTO[];
 }

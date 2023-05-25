@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { X } from "react-bootstrap-icons";
 
-import { PollElementContainer } from "../GlobalStyles";
+import { GradientContainer } from "../GlobalStyles";
 import AllowedUsersSelector from "./AllowedUsersSelector";
 import { User } from "../../api/Auth/interfaces";
 
@@ -14,20 +14,20 @@ const AllowedUsers = ({ setAllowedUsers }: AllowsUsersProps) => {
   const [users, setUsers] = useState<User[]>([]);
 
   const handleUserDelete = (userId: number) => {
-    setUsers(users.filter(user => user.id !== userId));
+    setUsers(users.filter((user) => user.id !== userId));
   };
 
   useEffect(() => {
-    setAllowedUsers(users.map(user => user.id));
+    setAllowedUsers(users.map((user) => user.id));
   }, [users]);
 
   return (
-    <PollElementContainer>
+    <GradientContainer>
       Choose users who will have permission to take part in this survey:
       <AllowedUsersSelector users={users} updateUsersList={setUsers} />
       {users.length > 0 && (
         <SelectedUsersContainer>
-          {users.map(user => (
+          {users.map((user) => (
             <SelectedUser key={user.id}>
               {user.username}
               <StyledX onClick={() => handleUserDelete(user.id)} />
@@ -35,7 +35,7 @@ const AllowedUsers = ({ setAllowedUsers }: AllowsUsersProps) => {
           ))}
         </SelectedUsersContainer>
       )}
-    </PollElementContainer>
+    </GradientContainer>
   );
 };
 

@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import styled from "styled-components";
 
-import { IPoll } from "../api/Polls/interfaces";
 import { PollApi } from "../api/Polls/api";
+import { PollPreviewDTO } from "../api/Polls/interfaces/polls";
 import { PollPreview } from "../components/PollPreview/PollPreview";
-import { useNavigate } from "react-router";
 
 export const PollList = () => {
-  const [polls, setPolls] = useState<IPoll[] | null>(null);
+  const [polls, setPolls] = useState<PollPreviewDTO[] | null>(null);
   const navigate = useNavigate();
 
   async function getResponse() {
-    const result = await PollApi.getAll(true);
+    const result = await PollApi.getAllPreview();
 
-    if (result?.items && result?.items.length > 0) {
-      setPolls(result.items);
+    if (result && result.length > 0) {
+      setPolls(result);
     }
   }
 
@@ -22,24 +22,19 @@ export const PollList = () => {
     getResponse();
   }, []);
 
-  const renderPollItems = () => {
-    return polls?.map((item) => {
-      return (
-        <PollPreview
-          key={item.id}
-          title={item.title}
-          author={item.author}
-          endDate={item.endDate}
-          onPollClick={() => navigate("/polls/" + item.id)}
-        />
-      );
-    });
-  };
-
   return (
     <Container>
       <Header>Share your opinion</Header>
-      {renderPollItems()}
+      {polls &&
+        polls.map((item: PollPreviewDTO) => (
+          <PollPreview
+            key={item.id}
+            title={item.title}
+            author={item.author.username}
+            endDate={item.endDate}
+            onPollClick={() => navigate("/polls/" + item.id)}
+          />
+        ))}
     </Container>
   );
 };

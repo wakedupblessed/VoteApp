@@ -3,16 +3,16 @@ import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 
-export interface HeaderLinkStyle {
+export interface CustomLinkStyle {
   backgroundcolor: string;
   textcolor: string;
   hoverbackgroundcolor: string;
 }
 
-interface HeaderLinkProps {
+interface CustomLinkProps {
   label: string;
   route: string;
-  headerLinkStyle?: HeaderLinkStyle;
+  headerLinkStyle?: CustomLinkStyle;
   onClick?: () => void;
 }
 
@@ -21,8 +21,8 @@ const CustomLink = ({
   route,
   headerLinkStyle,
   onClick,
-}: HeaderLinkProps): ReactElement => {
-  const defaultLinkStyle: HeaderLinkStyle = {
+}: CustomLinkProps): ReactElement => {
+  const defaultLinkStyle: CustomLinkStyle = {
     backgroundcolor: "white",
     textcolor: "black",
     hoverbackgroundcolor: "rgba(255, 255, 255, 0.8)",
@@ -39,7 +39,7 @@ const CustomLink = ({
 
 export default CustomLink;
 
-const StyledLink = styled(Link)<HeaderLinkStyle>`
+const StyledLink = styled(Link)<CustomLinkStyle>`
   text-decoration: none;
   display: inline-block;
   color: #000;
@@ -54,6 +54,7 @@ const StyledLink = styled(Link)<HeaderLinkStyle>`
     background: #000;
     transition: width 0.3s;
   }
+
   &:hover {
     cursor: pointer;
   }

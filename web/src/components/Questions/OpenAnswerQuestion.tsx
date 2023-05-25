@@ -1,25 +1,28 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import { CustomQuestionProps } from "./QuestionInterfaces";
+import { CustomQuestionProps } from "./interfaces";
 import BaseQuestion from "./BaseQuestion";
 
 const OpenAnswerQuestion = (props: CustomQuestionProps) => {
-  const { data: question, onStateChange } = props;
+  const { index, data, onStateChange } = props;
   const [answer, setAnswer] = useState<string>("");
 
-  const handleAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAnswerChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     const newAnswer = event.target.value;
     setAnswer(newAnswer);
-    onStateChange(question.id, newAnswer);
+    onStateChange(data.question_info.id, newAnswer);
   };
 
   return (
     <OpenAnswerQuestionStyled>
-      <BaseQuestion index={props.index} title={props.data.title}>
-        <div>
-          <StyledTextArea id={question.id} onChange={handleAnswerChange} />
-        </div>
+      <BaseQuestion index={props.index} title={data.question_info.title}>
+        <StyledTextArea
+          id={data.question_info.id}
+          onChange={handleAnswerChange}
+        />
       </BaseQuestion>
     </OpenAnswerQuestionStyled>
   );

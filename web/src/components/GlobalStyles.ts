@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle, keyframes } from "styled-components";
+import styled, { createGlobalStyle, keyframes, css } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`
   * {
@@ -102,46 +102,56 @@ export const CheckBoxWithInputArea = styled.div`
   flex-direction: column;
 `;
 
-export const PollElementContainer = styled.div`
-  width: 600px;
-  padding: 20px;
-  padding-bottom: 30px; /* Adjust this as needed */
-  border-radius: 3px;
-  flex-direction: column;
-  display: flex;
-  gap: 15px;
+const commonStyles = css`
   position: relative;
-  background: white;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 3px;
+  padding: 20px;
   box-sizing: border-box;
+`;
 
-  &:before,
+export const DefaultContainer = styled.div`
+  ${commonStyles}
+  margin-top: 20px;
+  width: 800px;
+  font-weight: normal;
+  border: 1px solid #d3d3d3;
+`;
+
+export const GradientStyles = css`
+  border: none;
+
   &:after {
     content: "";
     position: absolute;
-    box-sizing: border-box;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border-radius: 3px; // container's border-radius + border-width
-  }
-
-  &:before {
+    top: calc(-1 * 3px);
+    left: calc(-1 * 3px);
+    height: calc(100% + 3px * 2);
+    width: calc(100% + 3px * 2);
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    border-radius: calc(2 * 3px);
     z-index: -1;
-    background: #ccc; // your default border color
+    animation: ${gradientAnimation} 15s ease infinite;
+    background-size: 400% 400%;
   }
+`;
+
+export const FullTimeGradientContainer = styled(DefaultContainer)`
+  ${GradientStyles}
+`;
+
+export const GradientContainer = styled.div`
+  ${commonStyles}
+  ${GradientStyles}
+  width: 600px;
+  gap: 15px;
 
   &:after {
-    z-index: -2;
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 600% 600%;
-    animation: ${gradientAnimation} 20s ease infinite;
     opacity: 0;
     transition: opacity 0.3s ease;
-  }
-
-  &:hover:before {
-    opacity: 0;
   }
 
   &:hover:after {

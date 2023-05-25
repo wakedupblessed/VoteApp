@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowDown } from "react-bootstrap-icons";
 import styled from "styled-components";
-import { QuestionType } from "../../api/Polls/interfaces";
+import { QuestionType } from "../../api/Polls/interfaces/polls";
 
 export interface Option {
   id: string;

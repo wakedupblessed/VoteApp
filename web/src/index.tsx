@@ -23,9 +23,9 @@ reactRoot.render(
           <Route path='/login' element={<LoginPage />} />
           <Route path='/signup' element={<RegisterPage />} />
           <Route path='/polls/:pollId' element={<PollDetail />} />
-          {/* <Route element={<PrivateRoute />}> */}
-          <Route path='/polls/create' element={<CreatePollPage />} />
-          {/* </Route> */}
+          <Route element={<PrivateRoute />}>
+            <Route path='/polls/create' element={<CreatePollPage />} />
+          </Route>
           <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>

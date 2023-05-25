@@ -1,13 +1,13 @@
+import React from "react";
 import styled from "styled-components";
-import { format, isValid } from "date-fns";
-import { ArrowRight } from "react-bootstrap-icons";
 
+import { ArrowRight } from "react-bootstrap-icons";
 import { gradientAnimation } from "../GlobalStyles";
 
-interface IPollPreview {
+interface PollPreviewProps {
   title: string;
   author: string;
-  endDate: Date;
+  endDate: string;
   onPollClick: any;
 }
 
@@ -16,19 +16,14 @@ export const PollPreview = ({
   author,
   endDate,
   onPollClick,
-}: IPollPreview) => {
-  const renderTime = (endDate: Date) =>
-    isValid(endDate)
-      ? `Avalible till - ${format(endDate, "MMMM dd, HH:mm")}`
-      : "";
-
+}: PollPreviewProps) => {
   return (
     <Container onClick={onPollClick}>
       <Header>{title}</Header>
       <StyledArrowRight />
       <Info>
         <p>Author - {author}</p>
-        <p>{renderTime(endDate)}</p>
+        <p>Avalible till - {endDate || ""}</p>
       </Info>
     </Container>
   );
