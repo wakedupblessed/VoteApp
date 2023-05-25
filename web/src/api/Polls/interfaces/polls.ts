@@ -47,3 +47,15 @@ export interface PollDTO {
   };
   question_data: QuestionDTO[];
 }
+
+export interface QuestionAnswer {
+  user_id: number;
+  question_id: string;
+  single_option_id: string | null;
+  multiple_options: string[];
+  open_answer: string | null;
+}
+
+export interface PollVote {
+  answers: QuestionAnswer[];
+}

@@ -55,6 +55,7 @@ def vote(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_vote_statistic(request, poll_id, user_id):
     data = PollService.get_statistics(poll_id, user_id)
     if data is None:

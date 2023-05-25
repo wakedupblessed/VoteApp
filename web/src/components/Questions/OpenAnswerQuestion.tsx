@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import { CustomQuestionProps, QuestionAnswer } from "./interfaces";
+import { QuestionAnswer } from "../../api/Polls/interfaces/polls";
+import { CustomQuestionProps } from "./interfaces";
 import BaseQuestion from "./BaseQuestion";
 import { StyledInput } from "../GlobalStyles";
 
@@ -26,7 +27,7 @@ const OpenAnswerQuestion = (props: CustomQuestionProps) => {
     <BaseQuestion title={data.question_info.title}>
       <AnswerInput
         id={data.question_info.id}
-        placeholder='Enter answer'
+        placeholder="Enter answer"
         onChange={handleAnswerChange}
       />
     </BaseQuestion>

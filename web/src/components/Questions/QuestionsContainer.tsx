@@ -1,16 +1,16 @@
 import React, { useReducer } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 import { QuestionDTO } from "../../api/Polls/interfaces/polls";
-import {
-  IQuestionsContainer,
-  CustomQuestionProps,
-  QuestionAnswer,
-} from "./interfaces";
+import { QuestionAnswer } from "../../api/Polls/interfaces/polls";
+import { IQuestionsContainer, CustomQuestionProps } from "./interfaces";
 import SingleChoiceQuestion from "./SingleChoiceQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import OpenAnswerQuestion from "./OpenAnswerQuestion";
 import { StyledButton } from "../GlobalStyles";
+import useAuthContext from "../../сontext/hooks";
+import { PollApi } from "../../api/Polls/api";
 
 const questionStateReducer = (
   state: Record<string, QuestionAnswer>,
@@ -23,14 +23,35 @@ const questionStateReducer = (
 
 export const QuestionsContainer = (props: IQuestionsContainer) => {
   const [questionStates, dispatch] = useReducer(questionStateReducer, {});
+  const { user, authTokens } = useAuthContext();
+  const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(questionStates);
+    const questionsAnswers = Object.values(questionStates);
+    console.log(questionsAnswers);
+
+    if (authTokens) {
+      const result = await PollApi.vote(
+        {
+          answers: questionsAnswers,
+        },
+        authTokens.access
+      );
+
+      if (result) {
+        navigate("/");
+      } else {
+        alert("Some thing went wrong");
+      }
+    }
   };
 
   const updateQuestionState = (question: QuestionAnswer) => {
-    dispatch({ payload: question });
+    if (user) {
+      question.user_id = user.user_id;
+      dispatch({ payload: question });
+    }
   };
 
   const renderQuestion = (question: QuestionDTO) => {
@@ -63,7 +84,7 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
     <QuestionContainerStyled>
       <form onSubmit={handleSubmit}>
         {props.questions.map(renderQuestion)}
-        <StyledButton type='submit'>Send answers</StyledButton>
+        <StyledButton type="submit">Send answers</StyledButton>
       </form>
     </QuestionContainerStyled>
   );

@@ -37,7 +37,7 @@ interface OptionType {
 }
 
 const createOption = (user: User): OptionType => ({
-  label: user.username,
+  label: user.name,
   value: user,
 });
 

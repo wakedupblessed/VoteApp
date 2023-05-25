@@ -60,12 +60,13 @@ const SelectElement = ({ type, index }: SelectElementProps) => {
 
   return (
     <Container>
-      {options!.map((option) => (
+      {options!.map(option => (
         <OptionElement
           key={option.optionIndex}
           type={type}
           value={option.title}
-          onChange={(value) => {
+          isReadonly={false}
+          onChange={value => {
             const updatedOption = { ...option, title: value };
             handleOptionUpdate(updatedOption);
           }}
@@ -77,7 +78,8 @@ const SelectElement = ({ type, index }: SelectElementProps) => {
       ))}
       <OptionElement
         type={type}
-        placeholder='Add variant'
+        placeholder="Add variant"
+        isReadonly={true}
         handleFakeOption={handleFakeOption}
         inputRef={lastOptionRef}
       />
