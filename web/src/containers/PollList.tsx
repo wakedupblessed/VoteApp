@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
+import { format } from "date-fns";
 
 import { PollApi } from "../api/Polls/api";
 import { PollPreviewDTO } from "../api/Polls/interfaces/polls";
@@ -31,7 +32,7 @@ export const PollList = () => {
             key={item.id}
             title={item.title}
             author={item.author.username}
-            endDate={item.endDate}
+            endDate={format(new Date(item.endDate), "dd MMMM yyyy")}
             onPollClick={() => navigate("/polls/" + item.id)}
           />
         ))}

@@ -121,8 +121,6 @@ export const DefaultContainer = styled.div`
 `;
 
 export const GradientStyles = css`
-  border: none;
-
   &:after {
     content: "";
     position: absolute;
@@ -147,7 +145,7 @@ export const GradientContainer = styled.div`
   ${GradientStyles}
   width: 600px;
   gap: 15px;
-
+  border: 1px solid #d3d3d3;
   &:after {
     background-size: 600% 600%;
     opacity: 0;

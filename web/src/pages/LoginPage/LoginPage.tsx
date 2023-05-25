@@ -2,14 +2,14 @@ import { useContext } from "react";
 import styled from "styled-components";
 
 import { StyledInput, StyledButton } from "../../components/GlobalStyles";
-import AuthContext from "../../сontext/AuthContext";
+import useAuthContext from "../../сontext/hooks";
 
 const LoginPage = () => {
-  const { loginUser } = useContext(AuthContext)!;
+  const { loginUser } = useAuthContext();
 
   return (
     <LoginFormContainer onSubmit={loginUser}>
-      <StyledInput type='email' name='email' placeholder='Enter email' />
+      <StyledInput type='text' name='username' placeholder='Enter username' />
       <StyledInput
         type='password'
         name='password'

@@ -1,4 +1,6 @@
+import React from "react";
 import styled from "styled-components";
+import { format } from "date-fns";
 
 import { DefaultContainer, FullTimeGradientContainer } from "../GlobalStyles";
 import { QuestionsContainer } from "../Questions/QuestionsContainer";
@@ -19,7 +21,7 @@ export const Poll = (poll: PollDTO) => {
           Provided by <u>{poll_data.author.username}</u>
         </PollAuthor>
         <AdditionalData>
-          Avalible till {poll_data.end_date || ""}
+          Avalible till {format(new Date(poll_data.end_date), "dd MMMM yyyy")}
         </AdditionalData>
         <AdditionalData>
           Total participation {poll_data.number_of_vote}
@@ -68,7 +70,7 @@ const Content = styled.div`
 
 const BlurredView = styled(Content)`
   background-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(3px);
 `;
 
 const NonBlurredContent = styled(Content)``;

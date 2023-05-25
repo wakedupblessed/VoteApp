@@ -17,7 +17,7 @@ export const Header = () => {
       <NavAccountLinks>
         {user ? (
           <>
-            <StyledUserName>Hello, {user.username}</StyledUserName>
+            <StyledUserName>Hello, {user.name}</StyledUserName>
             <CustomLink label='Log out' route='/' onClick={logoutUser} />
           </>
         ) : (
@@ -57,5 +57,5 @@ const StyledUserName = styled.div`
   display: inline-block;
   color: #000;
   padding: 0 40px 0 0;
-  font-size: 24px;
+  font-size: 26px;
 `;

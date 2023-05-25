@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 import {
   StyledButton,
@@ -16,6 +17,8 @@ import DeadLineInput from "./DeadlineInput";
 import AllowedUsers from "../AllowedUsers/AllowedUsers";
 import useAuthContext from "../../сontext/hooks";
 
+import { PollApi } from "../../api/Polls/api";
+
 import { create, RootState } from "../../store/questionSlice";
 import {
   PollDTO,
@@ -26,18 +29,20 @@ import {
 import QuestionElement from "./QuestionElement";
 
 const PollCreate = () => {
-  const { user } = useAuthContext();
+  const { user, authTokens } = useAuthContext();
+  const navigate = useNavigate();
 
   const initialState: PollDTO = {
     poll_data: {
       title: "",
-      author_id: user.id,
+      author_id: 0,
       description: "",
       number_of_vote: 0,
       creation_date: format(new Date(), "yyyy-MM-dd"),
       end_date: "",
       is_anonymous: false,
       is_private: false,
+      responders: [],
     },
     question_data: [],
   };
@@ -100,14 +105,28 @@ const PollCreate = () => {
     }
   };
 
-  const createPoll = () => {
+  const addAuthorId = (pollData: PollDTO) => {
+    if (user) {
+      pollData.poll_data.author_id = user.user_id;
+    }
+  };
+
+  const createPoll = async () => {
     var pollData = formState;
     pollData.question_data = questions.map(createQuestionData);
 
     addEndDateIfNotPresent(pollData);
     addRespondersIfPrivate(pollData);
+    addAuthorId(pollData);
 
-    console.log(pollData);
+    if (authTokens) {
+      const result = await PollApi.create(pollData, authTokens?.access!);
+      if (result) {
+        navigate("/");
+      }
+    } else {
+      alert("Something went wrong");
+    }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

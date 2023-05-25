@@ -1,9 +1,9 @@
-from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
 from .jsonProcessors import *
 import uuid
-
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 def get_all(request):
@@ -30,7 +30,7 @@ def get_all(request):
 
 @api_view(['GET'])
 def get_all_preview(request):
-    polls = Poll.objects.all()
+    polls = Poll.objects.filter(is_private=False).all()
     data = []
     for poll in polls:
         data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data, "endDate": poll.end_date})
@@ -38,18 +38,13 @@ def get_all_preview(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_all_available_preview(request, id):
     polls = Poll.objects.filter(responders=id).all()
     data = []
     for poll in polls:
         data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data, "endDate": poll.end_date})
     return Response(data)
-
-
-@api_view(['GET'])
-def get_preview(request, id):
-    poll = Poll.objects.get(id=id)
-    return Response(data={"id": id, "title": poll.title, "author": ShortUserSerializer(poll.author).data, "endDate": poll.end_date})
 
 
 @api_view(['GET'])
@@ -69,6 +64,7 @@ def get(request, id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create(request):
     poll = PollDeserializer(data=request.data.get('poll_data'))
     if poll.is_valid():
@@ -114,6 +110,7 @@ def create(request):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete(request, id):
     if not Poll.objects.filter(id=id).exists():
         return Response(f'poll {id} doesnt exist', status=status.HTTP_404_NOT_FOUND)
@@ -123,6 +120,7 @@ def delete(request, id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def vote(request):
     #created list of answer object
     answers = []

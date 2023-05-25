@@ -22,9 +22,7 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    Object.entries(questionStates).forEach((element) => {
-      console.log(element[0], " ", element[1]);
-    });
+    console.log(questionStates);
   };
 
   const updateQuestionState = (id: string, value: any) => {
@@ -52,7 +50,6 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
       <QuestionComponent
         key={question.question_info.id}
         data={question}
-        index={index + 1}
         onStateChange={updateQuestionState}
       />
     );
@@ -76,6 +73,6 @@ const QuestionContainerStyled = styled.div`
   & > form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
 `;

@@ -1,8 +1,9 @@
 // import { IPoll, IQuestion, IOption } from "./interfaces";
 import axios from "axios";
 
-import { POLLS_PREVIEW, GET_POLL } from "./urls";
+import { POLLS_PREVIEW, GET_POLL, CREATE_POLL } from "./urls";
 import { PollDTO, PollPreviewDTO } from "./interfaces/polls";
+import { PollDTO as PollCreate } from "../../store/interfaces";
 
 export class PollApi {
   static async getAllPreview(): Promise<PollPreviewDTO[] | null> {
@@ -32,5 +33,22 @@ export class PollApi {
     }
 
     return null;
+  }
+
+  static async create(poll: PollCreate, token: string) {
+    try {
+      const response = await axios.post(CREATE_POLL, poll, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      if (response.status === 200) {
+        return response.data;
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

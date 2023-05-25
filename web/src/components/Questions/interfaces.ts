@@ -4,14 +4,13 @@ import { QuestionDTO } from "../../api/Polls/interfaces/polls";
 
 export interface BaseQuestionProps {
   title: string;
-  index: number;
   children: ReactNode;
 }
 
 export interface CustomQuestionProps {
   key: string;
   data: QuestionDTO;
-  index: number;
+  // index: number;
   onStateChange: (id: string, value: any) => void;
 }
 
