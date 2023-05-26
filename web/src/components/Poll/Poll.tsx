@@ -1,16 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { format } from "date-fns";
 
 import { DefaultContainer, FullTimeGradientContainer } from "../GlobalStyles";
 import { QuestionsContainer } from "../Questions/QuestionsContainer";
-import { PollDTO } from "../../api/Polls/interfaces/polls";
+import StatisticQuestionsContainer from "../StatisticComponents/StatisticQuestionsContainer";
+import { PollDTO, PollStatisticDTO } from "../../api/Polls/interfaces/polls";
 import CustomLink from "../CustomLink/CustomLink";
 import useAuthContext from "../../сontext/hooks";
+import { PollApi } from "../../api/Polls/api";
 
 export const Poll = (poll: PollDTO) => {
   const { poll_data, question_data } = poll;
-  const { user } = useAuthContext();
+  const { user, authTokens } = useAuthContext();
+  const [pollStatistic, setPollStatistic] = useState<PollStatisticDTO | null>(
+    null
+  );
+
+  const handlePollStatistic = async () => {
+    if (user && authTokens) {
+      const result = await PollApi.getVoteStatistic(
+        poll_data.id,
+        user.user_id,
+        authTokens.access
+      );
+
+      if (result) {
+        setPollStatistic(result);
+      }
+    }
+  };
+
+  useEffect(() => {
+    handlePollStatistic();
+  }, []);
 
   return (
     <Container>
@@ -28,19 +51,22 @@ export const Poll = (poll: PollDTO) => {
         </AdditionalData>
       </DefaultContainer>
       <FullTimeGradientContainer>
-        {!user && (
+        {pollStatistic ? (
+          <StatisticQuestionsContainer data={pollStatistic.question_data} />
+        ) : user ? (
+          <QuestionsContainer questions={question_data} />
+        ) : (
           <>
             <BlurredView />
             <NonBlurredContent>
               <h1>Poll participation not permitted</h1>
               <LinkContainer>
-                <CustomLink label='Register' route='/signup' />
-                <CustomLink label='Login' route='/login' />
+                <CustomLink label="Register" route="/signup" />
+                <CustomLink label="Login" route="/login" />
               </LinkContainer>
             </NonBlurredContent>
           </>
         )}
-        <QuestionsContainer questions={question_data}></QuestionsContainer>
       </FullTimeGradientContainer>
     </Container>
   );

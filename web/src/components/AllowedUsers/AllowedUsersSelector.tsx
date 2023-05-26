@@ -1,49 +1,23 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import Select, { ValueType, ActionMeta } from "react-select";
-import { User } from "../../api/Auth/interfaces";
 import Fuse from "fuse.js";
-
-const DATA: User[] = [
-  {
-    id: 1,
-    username: "johndoe",
-    email: "johndoe@example.com",
-  },
-  {
-    id: 2,
-    username: "janedoe",
-    email: "janedoe@example.com",
-  },
-  {
-    id: 3,
-    username: "alice",
-    email: "alice@example.com",
-  },
-  {
-    id: 4,
-    username: "bob",
-    email: "bob@example.com",
-  },
-  {
-    id: 5,
-    username: "charlie",
-    email: "charlie@example.com",
-  },
-];
+import { PollApi } from "../../api/Polls/api";
+import useAuthContext from "../../сontext/hooks";
+import { UserDTO } from "../../api/Polls/interfaces/polls";
 
 interface OptionType {
   label: string;
-  value: User;
+  value: UserDTO;
 }
 
-const createOption = (user: User): OptionType => ({
-  label: user.name,
+const createOption = (user: UserDTO): OptionType => ({
+  label: user.username,
   value: user,
 });
 
 interface AllowedUsersSelectorProps {
-  users: User[];
-  updateUsersList: (updatedUsers: User[]) => void;
+  users: UserDTO[];
+  updateUsersList: (updatedUsers: UserDTO[]) => void;
 }
 
 const AllowedUsersSelector = ({
@@ -51,14 +25,29 @@ const AllowedUsersSelector = ({
   updateUsersList,
 }: AllowedUsersSelectorProps) => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [options, setOptions] = useState<OptionType[]>(DATA.map(createOption));
+  const [usersOptions, setUserOptions] = useState<UserDTO[]>([]);
+  const [options, setOptions] = useState<OptionType[]>();
+  const { authTokens } = useAuthContext();
+
+  useEffect(() => {
+    if (authTokens) {
+      const fetchUsers = async () => {
+        const usersFetched = await PollApi.getUsers(authTokens.access);
+        if (usersFetched) {
+          console.log(usersFetched);
+          setUserOptions(...usersFetched.users);
+        }
+      };
+      fetchUsers();
+    }
+  }, []);
 
   const fuseOptions = {
     includeScore: true,
     threshold: 0.6,
   };
 
-  const fuse = new Fuse(DATA, fuseOptions);
+  const fuse = new Fuse(usersOptions, fuseOptions);
 
   useEffect(() => {
     if (inputValue.length > 2) {
@@ -67,9 +56,10 @@ const AllowedUsersSelector = ({
         .map(({ item }) => createOption(item));
       setOptions(result);
     } else {
-      setOptions(DATA.map(createOption));
+      setOptions(usersOptions.map(createOption));
     }
-  }, [inputValue]);
+    console.log(usersOptions);
+  }, [inputValue, usersOptions]);
 
   const handleInputChange = (inputValue: string) => {
     setInputValue(inputValue);

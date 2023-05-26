@@ -6,10 +6,17 @@ import {
   CREATE_POLL,
   VOTE,
   POLLS_ALLOWED_PREVIEW,
+  USERS,
+  VOTE_STATISTIC,
 } from "./urls";
-import { PollDTO, PollPreviewDTO, PollVote } from "./interfaces/polls";
+import {
+  PollDTO,
+  PollPreviewDTO,
+  PollVote,
+  UsersDTO,
+  PollStatisticDTO,
+} from "./interfaces/polls";
 import { PollDTO as PollCreate } from "../../store/interfaces";
-import { AuthTokens } from "../Auth/api";
 
 export class PollApi {
   static async getAll(): Promise<PollPreviewDTO[] | null> {
@@ -83,6 +90,7 @@ export class PollApi {
 
   static async vote(question: PollVote, token: string) {
     try {
+      console.log(question);
       const response = await axios.post(VOTE, question, {
         headers: {
           "Content-Type": "application/json",
@@ -96,5 +104,48 @@ export class PollApi {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  static async getVoteStatistic(
+    poll_id: string,
+    user_id: number,
+    token: string
+  ): Promise<PollStatisticDTO | null> {
+    try {
+      const url = `${VOTE_STATISTIC}/${poll_id}/${user_id}`;
+      const response = await axios.get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      if (response.status === 200) {
+        return response.data;
+      }
+    } catch (error) {}
+
+    return null;
+  }
+
+  static async getUsers(token: string): Promise<UsersDTO | null> {
+    try {
+      const response = await axios.get(USERS, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      if (response.status === 200) {
+        if (response.data === null) {
+          return null;
+        }
+        return response.data;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    return null;
   }
 }

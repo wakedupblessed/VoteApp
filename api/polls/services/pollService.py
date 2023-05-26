@@ -75,7 +75,7 @@ class PollService:
         Creates a poll
         Returns error string or None if successful
         """
-        poll = PollDeserializer(poll_request_data)
+        poll = PollDeserializer(data=poll_request_data)
         if poll.is_valid():
             poll.validated_data["id"] = uuid4().hex
             if poll.validated_data["is_private"] and len(poll.validated_data["responders"]) < 1:

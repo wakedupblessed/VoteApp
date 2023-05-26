@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import OptionElement from "./OptionElement";
-import { QuestionType } from "../../api/Polls/interfaces";
+import { QuestionType } from "../../api/Polls/interfaces/polls";
 import {
   addQuestionOption,
   updateQuestionOption,
@@ -12,7 +12,7 @@ import {
   RootState,
 } from "../../store/questionSlice";
 
-import { OptionDataUpsert, OptionDataDelete } from "../../store/interfaces";
+import { OptionUpsert, OptionDelete } from "../../store/interfaces";
 
 interface SelectElementProps {
   type: QuestionType.MultipleChoice | QuestionType.SingleChoice;
@@ -26,7 +26,7 @@ const SelectElement = ({ type, index }: SelectElementProps) => {
   const lastOptionRef = useRef<HTMLInputElement>(null);
 
   const handleFakeOption = () => {
-    const newOption: OptionDataUpsert = {
+    const newOption: OptionUpsert = {
       title: `Variant ${options!.length}`,
       questionIndex: index,
       optionIndex: options!.length,
@@ -38,17 +38,17 @@ const SelectElement = ({ type, index }: SelectElementProps) => {
 
   const debouncedUpdate = useMemo(
     () =>
-      debounce((value: OptionDataUpsert) => {
+      debounce((value: OptionUpsert) => {
         dispatch(updateQuestionOption(value));
       }, 500),
     [dispatch]
   );
 
-  const handleOptionUpdate = (value: OptionDataUpsert) => {
+  const handleOptionUpdate = (value: OptionUpsert) => {
     debouncedUpdate(value);
   };
 
-  const handleOptionDelete = (option: OptionDataDelete) => {
+  const handleOptionDelete = (option: OptionDelete) => {
     dispatch(deleteQuestionOption(option));
   };
 

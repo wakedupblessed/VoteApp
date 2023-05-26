@@ -11,15 +11,15 @@ import useAuthContext from "../сontext/hooks";
 export const PollList = () => {
   const [polls, setPolls] = useState<PollPreviewDTO[] | null>(null);
   const navigate = useNavigate();
-  const [pollTrigger, setPollTrigger] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<"all" | "allowed">("all");
   const { user, authTokens } = useAuthContext();
 
   async function getResponse() {
     let result: PollPreviewDTO[] | null = [];
 
-    if (pollTrigger) {
+    if (viewMode === "all") {
       result = await PollApi.getAll();
-    } else {
+    } else if (viewMode === "allowed") {
       result = await PollApi.getAllowed(user?.user_id!, authTokens?.access!);
     }
 
@@ -30,17 +30,17 @@ export const PollList = () => {
 
   useEffect(() => {
     getResponse();
-  }, [pollTrigger]);
+  }, [viewMode]);
 
   return (
     <Container>
       <Header>Share your opinion</Header>
       <ButtonContainer>
-        <StyledButton onClick={() => setPollTrigger(true)}>
+        <StyledButton onClick={() => setViewMode("all")}>
           All Polls
         </StyledButton>
         {authTokens && (
-          <StyledButton onClick={() => setPollTrigger(false)}>
+          <StyledButton onClick={() => setViewMode("allowed")}>
             Polls for you
           </StyledButton>
         )}

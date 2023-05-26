@@ -57,9 +57,9 @@ def vote(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_vote_statistic(request, poll_id, user_id):
-    data = PollService.get_statistics(poll_id, user_id)
+    data = PollService().get_statistics(poll_id=poll_id, user_id=user_id)
     if data is None:
-        return Response("this poll has no responses", status=status.HTTP_400_BAD_REQUEST)
+        return Response(None, status=status.HTTP_200_OK)
 
     return Response(data, status=status.HTTP_200_OK)
 

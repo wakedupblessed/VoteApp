@@ -29,7 +29,6 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const questionsAnswers = Object.values(questionStates);
-    console.log(questionsAnswers);
 
     if (authTokens) {
       const result = await PollApi.vote(

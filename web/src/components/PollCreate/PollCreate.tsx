@@ -119,6 +119,8 @@ const PollCreate = () => {
     addRespondersIfPrivate(pollData);
     addAuthorId(pollData);
 
+    console.log(pollData);
+
     if (authTokens) {
       const result = await PollApi.create(pollData, authTokens?.access!);
       if (result) {
