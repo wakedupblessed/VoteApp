@@ -213,6 +213,9 @@ class PollService:
                     return "invalid matching: option - question - answer"
 
         [answer.save() for answer in answers]
+        poll = Poll.objects.filter(id=poll_id).get()
+        poll.number_of_vote += 1
+        poll.save()
         return None
 
     def delete(self, id):
