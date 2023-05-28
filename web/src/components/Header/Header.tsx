@@ -11,11 +11,11 @@ export const Header = () => {
   return (
     <HeaderArea>
       <NavLinkContainer>
-        <CustomLink label="Home" route="/" />
+        <CustomLink label='Home' route='/' />
         {user && (
           <>
-            <CustomLink label="Create" route="/polls/create" />
-            <CustomLink label="Manage Polls" route="/polls/manage" />
+            <CustomLink label='Create' route='/polls/create' />
+            <CustomLink label='Manage Polls' route='/polls/manage' />
           </>
         )}
       </NavLinkContainer>
@@ -23,12 +23,12 @@ export const Header = () => {
         {user ? (
           <>
             <StyledUserName>Hello, {user.name}</StyledUserName>
-            <CustomLink label="Log out" route="/" onClick={logoutUser} />
+            <CustomLink label='Log out' route='/' onClick={logoutUser} />
           </>
         ) : (
           <>
-            <CustomLink label="Log in" route="/login" />
-            <CustomLink label="Sign up" route="/signup" />
+            <CustomLink label='Log in' route='/login' />
+            <CustomLink label='Sign up' route='/signup' />
           </>
         )}
       </NavAccountLinks>

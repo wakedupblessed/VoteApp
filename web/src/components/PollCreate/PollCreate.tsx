@@ -56,7 +56,7 @@ const PollCreate = () => {
   );
 
   const updateFormState = (field: string, value: string | boolean | null) => {
-    setFormState(prevState => ({
+    setFormState((prevState) => ({
       ...prevState,
       poll_data: { ...prevState.poll_data, [field]: value },
     }));
@@ -119,8 +119,6 @@ const PollCreate = () => {
     addRespondersIfPrivate(pollData);
     addAuthorId(pollData);
 
-    console.log(pollData);
-
     if (authTokens) {
       const result = await PollApi.create(pollData, authTokens?.access!);
       if (result) {
@@ -144,46 +142,48 @@ const PollCreate = () => {
       <PollCreateContainer>
         <GradientContainer>
           <PollTitleInput
-            id="poll-title"
-            name="title"
-            placeholder="Enter poll title"
+            id='poll-title'
+            name='title'
+            placeholder='Enter poll title'
             value={formState.poll_data.title}
             onChange={handleInputChange}
           />
           <StyledTextArea
-            id="poll-description"
-            name="description"
-            placeholder="Enter poll description"
+            id='poll-description'
+            name='description'
+            placeholder='Enter poll description'
             value={formState.poll_data.description}
             onChange={handleInputChange}
           />
           <DeadLineInput
-            onChange={date => updateFormState("end_date", date ? date : null)}
+            onChange={(date) => updateFormState("end_date", date ? date : null)}
           />
           <CustomCheckBox
-            id="anonymous"
-            label="Anonymous Voting"
-            onChange={checked => handleCheckBoxChange("is_anonymous", checked)}
+            id='anonymous'
+            label='Anonymous Voting'
+            onChange={(checked) =>
+              handleCheckBoxChange("is_anonymous", checked)
+            }
           />
           <CustomCheckBox
-            id="private"
-            label="Private Vote"
-            onChange={checked => handleCheckBoxChange("is_private", checked)}
+            id='private'
+            label='Private Vote'
+            onChange={(checked) => handleCheckBoxChange("is_private", checked)}
           />
         </GradientContainer>
         {formState.poll_data.is_private && (
           <AllowedUsers setAllowedUsers={setAllowedUsers} />
         )}
-        {questions.map(question => (
+        {questions.map((question) => (
           <QuestionElement
             key={question.question_info.index}
             index={question.question_info.index}
           />
         ))}
-        <StyledButton onClick={addQuestion} type="button">
+        <StyledButton onClick={addQuestion} type='button'>
           Add Question
         </StyledButton>
-        <StyledButton type="button" onClick={createPoll}>
+        <StyledButton type='button' onClick={createPoll}>
           Create survey
         </StyledButton>
       </PollCreateContainer>

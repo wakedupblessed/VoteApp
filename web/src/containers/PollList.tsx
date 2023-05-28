@@ -20,7 +20,9 @@ export const PollList = () => {
     if (viewMode === "all") {
       result = await PollApi.getAll();
     } else if (viewMode === "allowed") {
-      result = await PollApi.getAllowed(user?.user_id!, authTokens?.access!);
+      if (user && authTokens) {
+        result = await PollApi.getAllowed(user?.user_id!, authTokens?.access!);
+      }
     }
 
     if (result) {

@@ -22,7 +22,6 @@ export class PollApi {
   static async getAll(): Promise<PollPreviewDTO[] | null> {
     try {
       const response = await axios.get(POLLS_PREVIEW);
-
       if (response.status === 200) {
         return response.data;
       }

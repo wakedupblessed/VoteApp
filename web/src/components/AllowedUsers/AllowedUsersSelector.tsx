@@ -34,8 +34,7 @@ const AllowedUsersSelector = ({
       const fetchUsers = async () => {
         const usersFetched = await PollApi.getUsers(authTokens.access);
         if (usersFetched) {
-          console.log(usersFetched);
-          setUserOptions(...usersFetched.users);
+          setUserOptions([...usersFetched.users]);
         }
       };
       fetchUsers();
@@ -55,10 +54,9 @@ const AllowedUsersSelector = ({
         .search(inputValue)
         .map(({ item }) => createOption(item));
       setOptions(result);
-    } else {
+    } else if (usersOptions) {
       setOptions(usersOptions.map(createOption));
     }
-    console.log(usersOptions);
   }, [inputValue, usersOptions]);
 
   const handleInputChange = (inputValue: string) => {
@@ -79,7 +77,7 @@ const AllowedUsersSelector = ({
   };
 
   const customStyles = {
-    control: provided => ({
+    control: (provided) => ({
       ...provided,
       borderColor: "#ddd",
       boxShadow: null,
