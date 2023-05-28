@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Trash3 as Trash } from "react-bootstrap-icons";
 
 import { ArrowRight } from "react-bootstrap-icons";
 import { gradientAnimation } from "../GlobalStyles";
@@ -9,6 +10,7 @@ interface PollPreviewProps {
   author: string;
   endDate: string;
   onPollClick: any;
+  onPollDelete?: any | null;
 }
 
 export const PollPreview = ({
@@ -16,11 +18,18 @@ export const PollPreview = ({
   author,
   endDate,
   onPollClick,
+  onPollDelete,
 }: PollPreviewProps) => {
+  const handleDelete = (e) => {
+    e.preventDefault();
+    onPollDelete();
+  };
+
   return (
-    <Container onClick={onPollClick}>
+    <Container>
       <Header>{title}</Header>
-      <StyledArrowRight />
+      {onPollDelete && <StyledTrash onClick={handleDelete} />}
+      <StyledArrowRight onClick={onPollClick} />
       <Info>
         <p>Author - {author}</p>
         <p>Avalible till - {endDate || ""}</p>
@@ -67,6 +76,14 @@ const StyledArrowRight = styled(ArrowRight)`
   position: absolute;
   top: 50%;
   right: 25px;
+  transform: translateY(-50%);
+`;
+
+const StyledTrash = styled(Trash)`
+  font-size: 26px;
+  position: absolute;
+  top: 50%;
+  right: 75px;
   transform: translateY(-50%);
 `;
 

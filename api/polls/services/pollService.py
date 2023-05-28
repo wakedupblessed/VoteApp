@@ -70,6 +70,17 @@ class PollService:
                          "endDate": poll.end_date})
         return data
 
+    def get_user_polls(self, id):
+        """
+        Gets all polls available for specific user
+        """
+        polls = Poll.objects.filter(author=id).all()
+        data = []
+        for poll in polls:
+            data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data,
+                         "endDate": poll.end_date})
+        return data
+
     def create(self, poll_request_data, question_request_data):
         """
         Creates a poll

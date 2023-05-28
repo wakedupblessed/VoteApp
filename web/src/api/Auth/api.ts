@@ -29,9 +29,18 @@ export class AuthApi {
 
   static async refreshToken(token: string): Promise<AuthTokens | null> {
     try {
-      const response = await axios.post(REFRESH_URL, {
-        refresh: token,
-      });
+      const response = await axios.post(
+        REFRESH_URL,
+        {
+          refresh: token,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
 
       if (response.status === 200) {
         return response.data;

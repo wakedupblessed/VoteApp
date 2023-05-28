@@ -8,6 +8,8 @@ import {
   POLLS_ALLOWED_PREVIEW,
   USERS,
   VOTE_STATISTIC,
+  USER_POLLS,
+  DELETE_POLL,
 } from "./urls";
 import {
   PollDTO,
@@ -38,6 +40,29 @@ export class PollApi {
   ): Promise<PollPreviewDTO[] | null> {
     try {
       const url = `${POLLS_ALLOWED_PREVIEW}/${user_id}`;
+      const response = await axios.get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      if (response.status === 200) {
+        return response.data;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    return null;
+  }
+
+  static async getUsersPoll(
+    id: number,
+    token: string
+  ): Promise<PollPreviewDTO[] | null> {
+    try {
+      const url = `${USER_POLLS}/${id}`;
       const response = await axios.get(url, {
         headers: {
           "Content-Type": "application/json",
@@ -87,9 +112,25 @@ export class PollApi {
     }
   }
 
+  static async deletePoll(id: string, token: string) {
+    try {
+      const response = await axios.post(DELETE_POLL, id, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      if (response.status === 200) {
+        return response;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   static async vote(question: PollVote, token: string) {
     try {
-      console.log(question);
       const response = await axios.post(VOTE, question, {
         headers: {
           "Content-Type": "application/json",

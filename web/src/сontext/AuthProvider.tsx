@@ -99,13 +99,13 @@ export const AuthProvider = ({ children }: Props) => {
       refreshToken();
     }
 
-    const fiveMinutes = 1000 * 60 * 5;
+    const fifteenMinutes = 1000 * 60 * 14;
 
     const interval = setInterval(() => {
       if (authTokens) {
         refreshToken();
       }
-    }, fiveMinutes);
+    }, fifteenMinutes);
 
     return () => {
       clearInterval(interval);
