@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -71,6 +72,7 @@ SIMPLE_JWT = {
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -135,6 +137,16 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '/static')
 APPEND_SLASH = False
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import os
+
+REACT_APP_DIR = os.path.join(BASE_DIR, '/web', 'build')
+
+STATICFILES_DIRS = [
+    REACT_APP_DIR,
+]
+
