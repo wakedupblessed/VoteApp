@@ -13,7 +13,6 @@ const StatisticQuestionsContainer = (
 ) => {
   const renderQuestion = (question: QuestionStatisticDTO) => {
     let StatisticComponent: React.ComponentType<StatisticComponentProps>;
-
     switch (question.question_info.question_type) {
       case "SingleChoice":
       case "MultipleChoice":
@@ -27,7 +26,11 @@ const StatisticQuestionsContainer = (
     }
 
     return (
-      <StatisticComponent key={question.question_info.id} data={question} />
+      <StatisticComponent
+        key={question.question_info.id}
+        data={question}
+        isAnonymous={stastic.isAnonymous}
+      />
     );
   };
 

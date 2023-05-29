@@ -39,6 +39,11 @@ export interface QuestionDTO {
   option_data?: OptionDTO[];
 }
 
+export interface OpenAnswerDTO {
+  username?: string | null;
+  answer: string;
+}
+
 export interface QuestionStatisticDTO {
   question_info: {
     id: string;
@@ -46,7 +51,7 @@ export interface QuestionStatisticDTO {
     question_type: "SingleChoice" | "MultipleChoice" | "OpenAnswer";
     poll: string;
   };
-  answer?: string | null;
+  answer?: OpenAnswerDTO[] | null;
   option_data?: OptionStatisticDTO[] | null;
 }
 

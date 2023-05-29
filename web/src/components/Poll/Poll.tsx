@@ -52,7 +52,10 @@ export const Poll = (poll: PollDTO) => {
       </DefaultContainer>
       <FullTimeGradientContainer>
         {pollStatistic ? (
-          <StatisticQuestionsContainer data={pollStatistic.question_data} />
+          <StatisticQuestionsContainer
+            data={pollStatistic.question_data}
+            isAnonymous={poll_data.is_anonymous}
+          />
         ) : user ? (
           <QuestionsContainer questions={question_data} />
         ) : (
