@@ -15,6 +15,7 @@ def get_all_preview(request):
 def get_all_available_preview(request, id):
     return Response(PollService().get_all_available_preview(id))
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_polls(request, id):

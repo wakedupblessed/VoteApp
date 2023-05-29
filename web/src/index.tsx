@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
+import axios from "axios";
 
 import { PollBrowse } from "./pages/PollBrowse/PollBrowse";
 import { PollDetail } from "./pages/PollDetail/PollDetail";
@@ -10,6 +11,9 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import CreatePollPage from "./pages/CreatePollPage/CreatePollPage";
 import PrivateRoute from "./utils/PrivateRoute/PrivateRoute";
 import PollManage from "./pages/PollManage/PollManage";
+
+axios.defaults.xsrfCookieName = "csrftoken";
+axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
 const rootDiv = document.getElementById("root") as HTMLElement;
 

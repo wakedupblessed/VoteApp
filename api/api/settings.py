@@ -1,14 +1,24 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+import django_heroku
+import dotenv
+import dj_database_url
+import os
+
+django_heroku.settings(locals())
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 SECRET_KEY = 'django-insecure-*%@lrcb++ka1hgu0+8p$7dy=%a7#1x7ek$k4%s%yyy41jb@mnf'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -81,6 +91,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'web/build/static')
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'api.urls'
@@ -88,8 +108,7 @@ ROOT_URLCONF = 'api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'web/build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -105,12 +124,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'api.wsgi.application'
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -137,16 +152,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, '/static')
 APPEND_SLASH = False
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-import os
-
-REACT_APP_DIR = os.path.join(BASE_DIR, '/web', 'build')
-
-STATICFILES_DIRS = [
-    REACT_APP_DIR,
-]
-
+options = DATABASES['default'].get('OPTIONS', {})
+options.pop('sslmode', None)

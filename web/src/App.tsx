@@ -7,6 +7,8 @@ import { Footer } from "./components/Footer/Footer";
 import styled from "styled-components";
 import { AuthProvider } from "./сontext/AuthProvider";
 
+
+
 export default function App() {
   return (
     <>
