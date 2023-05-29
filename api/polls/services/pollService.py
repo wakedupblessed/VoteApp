@@ -130,7 +130,7 @@ class PollService:
                         if poll.is_anonymous:
                             open_answer_data.append({"username": None, "answer": answer.open_answer})
                         else:
-                            open_answer_data.append({"username": User.objects.filter(id=user_id).get().username, "answer": answer.open_answer})
+                            open_answer_data.append({"username": User.objects.filter(id=answer.user_id).get().username, "answer": answer.open_answer})
                     question_data.append({
                         "question_info": QuestionSerializer(question).data,
                         "option_data": open_answer_data
