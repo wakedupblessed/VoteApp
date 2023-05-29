@@ -15,32 +15,43 @@ const OpenAnswerStatistic = (statistic: StatisticComponentProps) => {
 
   const renderStatistic = () => {
     if (isAnonymous) {
-      return data.answer?.map(item => (
-        <Container>
-          {item.username}
-          <StyledInput placeholder={item.answer} readOnly />
-        </Container>
+      return data.option_data?.map((item, index) => (
+        <StyledInput key={index} placeholder={item.answer} readOnly />
       ));
     }
 
-    return data.answer?.map(item => (
-      <StyledInput placeholder={item.answer} readOnly />
+    return data.option_data?.map((item, index) => (
+      <ContainerItem key={index}>
+        {item.username}
+        <StyledInput placeholder={item.answer} readOnly />
+      </ContainerItem>
     ));
   };
 
   return (
     <BaseQuestion title={data.question_info.title}>
-      <StyledButton onClick={toggleVisibility}>
-        {isVisible ? "Hide Section" : "Show Section"}
-      </StyledButton>
-      {isVisible && renderStatistic()}
+      <Container>
+        <StyledButton onClick={toggleVisibility}>
+          {isVisible ? "Hide Section" : "Show Section"}
+        </StyledButton>
+        {isVisible && renderStatistic()}
+      </Container>
     </BaseQuestion>
   );
 };
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 20px;
+`;
+
+const ContainerItem = styled.div`
+  display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: 5px;
 `;
 
 const StyledButton = styled.button`

@@ -22,13 +22,6 @@ export interface OptionDTO {
   question: string;
 }
 
-export interface OptionStatisticDTO {
-  id: string;
-  title: string;
-  question: string;
-  votes_percent: number;
-}
-
 export interface QuestionDTO {
   question_info: {
     id: string;
@@ -39,9 +32,16 @@ export interface QuestionDTO {
   option_data?: OptionDTO[];
 }
 
-export interface OpenAnswerDTO {
+export interface OpenAnswerStatisticDTO {
   username?: string | null;
   answer: string;
+}
+
+export interface OptionStatisticDTO {
+  id: string;
+  title: string;
+  question: string;
+  votes_percent: number;
 }
 
 export interface QuestionStatisticDTO {
@@ -51,8 +51,7 @@ export interface QuestionStatisticDTO {
     question_type: "SingleChoice" | "MultipleChoice" | "OpenAnswer";
     poll: string;
   };
-  answer?: OpenAnswerDTO[] | null;
-  option_data?: OptionStatisticDTO[] | null;
+  option_data?: OptionStatisticDTO[] | OpenAnswerStatisticDTO[] | null;
 }
 
 export interface PollDTO {
