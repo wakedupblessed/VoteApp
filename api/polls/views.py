@@ -6,11 +6,6 @@ from .services.pollService import PollService
 
 
 @api_view(['GET'])
-def get_all(request):
-    return Response(PollService().get_all())
-
-
-@api_view(['GET'])
 def get_all_preview(request):
     return Response(PollService().get_all_preview())
 
@@ -20,6 +15,10 @@ def get_all_preview(request):
 def get_all_available_preview(request, id):
     return Response(PollService().get_all_available_preview(id))
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_polls(request, id):
+    return Response(PollService().get_user_polls(id))
 
 @api_view(['GET'])
 def get(request, id):
@@ -36,13 +35,14 @@ def create(request):
     return Response('Poll created successfully', status=status.HTTP_200_OK)
 
 
-@api_view(['DELETE'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def delete(request, id):
-    if not PollService().delete(id):
-        return Response(f'poll {id} doesnt exist', status=status.HTTP_404_NOT_FOUND)
+def delete(request):
+    poll_id = request.data
+    if not PollService().delete(poll_id):
+        return Response(f'poll {poll_id} doesnt exist', status=status.HTTP_404_NOT_FOUND)
 
-    return Response(f'poll {id} deleted', status=status.HTTP_200_OK)
+    return Response(f'poll {poll_id} deleted', status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -55,10 +55,11 @@ def vote(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_vote_statistic(request, poll_id, user_id):
-    data = PollService.get_statistics(poll_id, user_id)
+    data = PollService().get_statistics(poll_id=poll_id, user_id=user_id)
     if data is None:
-        return Response("this poll has no responses", status=status.HTTP_400_BAD_REQUEST)
+        return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(data, status=status.HTTP_200_OK)
 

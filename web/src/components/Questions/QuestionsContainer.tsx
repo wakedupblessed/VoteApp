@@ -1,35 +1,59 @@
 import React, { useReducer } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 import { QuestionDTO } from "../../api/Polls/interfaces/polls";
+import { QuestionAnswer } from "../../api/Polls/interfaces/polls";
 import { IQuestionsContainer, CustomQuestionProps } from "./interfaces";
 import SingleChoiceQuestion from "./SingleChoiceQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import OpenAnswerQuestion from "./OpenAnswerQuestion";
 import { StyledButton } from "../GlobalStyles";
+import useAuthContext from "../../сontext/hooks";
+import { PollApi } from "../../api/Polls/api";
 
 const questionStateReducer = (
-  state: Record<string, string>,
+  state: Record<string, QuestionAnswer>,
   action: {
-    payload: { id: string; value: string };
+    payload: QuestionAnswer;
   }
 ) => {
-  return { ...state, [action.payload.id]: action.payload.value };
+  return { ...state, [action.payload.question_id]: action.payload };
 };
 
 export const QuestionsContainer = (props: IQuestionsContainer) => {
   const [questionStates, dispatch] = useReducer(questionStateReducer, {});
+  const { user, authTokens } = useAuthContext();
+  const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(questionStates);
+    const questionsAnswers = Object.values(questionStates);
+
+    if (authTokens) {
+      const result = await PollApi.vote(
+        {
+          answers: questionsAnswers,
+        },
+        authTokens.access
+      );
+
+      if (result) {
+        navigate("/");
+      } else {
+        alert("Some thing went wrong");
+      }
+    }
   };
 
-  const updateQuestionState = (id: string, value: any) => {
-    dispatch({ payload: { id, value } });
+  const updateQuestionState = (question: QuestionAnswer) => {
+    if (user) {
+      question.user_id = user.user_id;
+      dispatch({ payload: question });
+    }
   };
 
-  const renderQuestion = (question: QuestionDTO, index: number) => {
+  const renderQuestion = (question: QuestionDTO) => {
     let QuestionComponent: React.ComponentType<CustomQuestionProps>;
 
     switch (question.question_info.question_type) {
@@ -59,7 +83,7 @@ export const QuestionsContainer = (props: IQuestionsContainer) => {
     <QuestionContainerStyled>
       <form onSubmit={handleSubmit}>
         {props.questions.map(renderQuestion)}
-        <StyledButton type='submit'>Send answers</StyledButton>
+        <StyledButton type="submit">Send answers</StyledButton>
       </form>
     </QuestionContainerStyled>
   );

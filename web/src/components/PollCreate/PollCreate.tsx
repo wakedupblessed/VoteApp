@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { format } from "date-fns";
@@ -19,7 +19,7 @@ import useAuthContext from "../../сontext/hooks";
 
 import { PollApi } from "../../api/Polls/api";
 
-import { create, RootState } from "../../store/questionSlice";
+import { create, clear, RootState } from "../../store/questionSlice";
 import {
   PollDTO,
   QuestionDTO,
@@ -49,6 +49,7 @@ const PollCreate = () => {
 
   const [formState, setFormState] = useState(initialState);
   const [allowedUsers, setAllowedUsers] = useState<number[]>([]);
+  const [errorList, setErrorList] = useState<string[]>([]);
 
   const dispatch = useDispatch();
   const questions = useSelector(
@@ -56,7 +57,7 @@ const PollCreate = () => {
   );
 
   const updateFormState = (field: string, value: string | boolean | null) => {
-    setFormState((prevState) => ({
+    setFormState(prevState => ({
       ...prevState,
       poll_data: { ...prevState.poll_data, [field]: value },
     }));
@@ -111,7 +112,71 @@ const PollCreate = () => {
     }
   };
 
+  const validateQuestions = (questions: QuestionCreate[], errors: string[]) => {
+    let index = 1;
+    for (let question of questions) {
+      if (!question.question_info.title) {
+        errors.push(`The question ${index} missing title`);
+      }
+
+      if (!question.question_info.question_type) {
+        errors.push(`The question ${index} type is not defined`);
+      }
+
+      if (
+        question.question_info.question_type === "SingleChoice" ||
+        question.question_info.question_type === "MultipleChoice"
+      ) {
+        if (question.option_data && question.option_data.length !== 0) {
+          if (
+            question.option_data.length < 2 ||
+            question.option_data.length > 10
+          ) {
+            errors.push(
+              `The question ${index} options should be more than 2 and less than 10`
+            );
+          }
+        } else {
+          errors.push(`The question ${index} missing options`);
+        }
+      }
+
+      index++;
+    }
+  };
+
+  const validatePoll = (pollData: PollDTO): string[] => {
+    let localErrorList: string[] = [];
+
+    if (!pollData.poll_data.title) {
+      localErrorList.push("Title is required");
+    }
+
+    if (pollData.poll_data.end_date) {
+      const endDate = new Date(pollData.poll_data.end_date);
+      if (isNaN(endDate.getTime()) || (endDate).setHours(0, 0, 0, 0) < (new Date()).setHours(0, 0, 0, 0)) {
+        localErrorList.push("The end date should be later than now");
+      }
+    }
+
+    if (pollData.poll_data.is_private && allowedUsers.length === 0) {
+      localErrorList.push(
+        "At least one responder is required for private polls"
+      );
+    }
+
+    if (pollData.question_data.length === 0) {
+      localErrorList.push("At least one question is required");
+    } else {
+      validateQuestions(pollData.question_data, localErrorList);
+    }
+
+    return localErrorList;
+  };
+
   const createPoll = async () => {
+    setErrorList([]);
+
     var pollData = formState;
     pollData.question_data = questions.map(createQuestionData);
 
@@ -119,13 +184,20 @@ const PollCreate = () => {
     addRespondersIfPrivate(pollData);
     addAuthorId(pollData);
 
+    let localErrorList: string[] = validatePoll(pollData);
+
+    if (localErrorList.length > 0) {
+      setErrorList(localErrorList);
+      return;
+    }
+
     if (authTokens) {
       const result = await PollApi.create(pollData, authTokens?.access!);
       if (result) {
         navigate("/");
+      } else {
+        setErrorList(prevState => [...prevState, "Something went wrong"]);
       }
-    } else {
-      alert("Something went wrong");
     }
   };
 
@@ -137,53 +209,63 @@ const PollCreate = () => {
     updateFormState(field, checked);
   };
 
+  useEffect(() => {
+    setErrorList([]);
+    dispatch(clear());
+  }, []);
+
   return (
     <>
       <PollCreateContainer>
+        {errorList.length > 0 && (
+          <ErrorContainer>
+            {errorList.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ErrorContainer>
+        )}
         <GradientContainer>
           <PollTitleInput
-            id='poll-title'
-            name='title'
-            placeholder='Enter poll title'
+            id="poll-title"
+            name="title"
+            placeholder="Enter poll title"
             value={formState.poll_data.title}
             onChange={handleInputChange}
           />
           <StyledTextArea
-            id='poll-description'
-            name='description'
-            placeholder='Enter poll description'
+            id="poll-description"
+            name="description"
+            placeholder="Enter poll description"
             value={formState.poll_data.description}
             onChange={handleInputChange}
           />
           <DeadLineInput
-            onChange={(date) => updateFormState("end_date", date ? date : null)}
+            onChange={date => updateFormState("end_date", date ? date : null)}
           />
           <CustomCheckBox
-            id='anonymous'
-            label='Anonymous Voting'
-            onChange={(checked) =>
-              handleCheckBoxChange("is_anonymous", checked)
-            }
+            id="anonymous"
+            label="Anonymous Voting"
+            onChange={checked => handleCheckBoxChange("is_anonymous", checked)}
           />
           <CustomCheckBox
-            id='private'
-            label='Private Vote'
-            onChange={(checked) => handleCheckBoxChange("is_private", checked)}
+            id="private"
+            label="Private Vote"
+            onChange={checked => handleCheckBoxChange("is_private", checked)}
           />
         </GradientContainer>
         {formState.poll_data.is_private && (
           <AllowedUsers setAllowedUsers={setAllowedUsers} />
         )}
-        {questions.map((question) => (
+        {questions.map(question => (
           <QuestionElement
             key={question.question_info.index}
             index={question.question_info.index}
           />
         ))}
-        <StyledButton onClick={addQuestion} type='button'>
+        <StyledButton onClick={addQuestion} type="button">
           Add Question
         </StyledButton>
-        <StyledButton type='button' onClick={createPoll}>
+        <StyledButton type="button" onClick={createPoll}>
           Create survey
         </StyledButton>
       </PollCreateContainer>
@@ -196,6 +278,16 @@ const PollCreateContainer = styled.div`
   display: flex;
   gap: 20px;
   align-items: end;
+`;
+
+const ErrorContainer = styled.ul`
+  color: rgb(255, 27, 120);
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: -15px;
+  margin-top: -15px;
 `;
 
 const PollTitleInput = styled(StyledInput)`

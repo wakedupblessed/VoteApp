@@ -44,3 +44,7 @@ export interface PollDTO {
   };
   question_data: QuestionCreate[];
 }
+
+export interface UsersDTO {
+  users: UserDTO[];
+}

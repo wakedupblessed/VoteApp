@@ -32,6 +32,28 @@ export interface QuestionDTO {
   option_data?: OptionDTO[];
 }
 
+export interface OpenAnswerStatisticDTO {
+  username?: string | null;
+  answer: string;
+}
+
+export interface OptionStatisticDTO {
+  id: string;
+  title: string;
+  question: string;
+  votes_percent: number;
+}
+
+export interface QuestionStatisticDTO {
+  question_info: {
+    id: string;
+    title: string;
+    question_type: "SingleChoice" | "MultipleChoice" | "OpenAnswer";
+    poll: string;
+  };
+  option_data?: OptionStatisticDTO[] | OpenAnswerStatisticDTO[] | null;
+}
+
 export interface PollDTO {
   poll_data: {
     id: string;
@@ -46,4 +68,36 @@ export interface PollDTO {
     responders?: UserDTO[] | null;
   };
   question_data: QuestionDTO[];
+}
+
+export interface QuestionAnswer {
+  user_id: number;
+  question_id: string;
+  single_option_id: string | null;
+  multiple_options: string[];
+  open_answer: string | null;
+}
+
+export interface PollVote {
+  answers: QuestionAnswer[];
+}
+
+export interface UsersDTO {
+  users: UserDTO[];
+}
+
+export interface PollStatisticDTO {
+  poll_data: {
+    id: string;
+    title: string;
+    description: string;
+    author: UserDTO;
+    number_of_vote: number;
+    creation_date: string;
+    end_date: string;
+    is_anonymous: boolean;
+    is_private: boolean;
+    responders?: UserDTO[] | null;
+  };
+  question_data: QuestionStatisticDTO[];
 }

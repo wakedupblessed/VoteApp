@@ -48,7 +48,7 @@ class PollDeserializer(serializers.Serializer):
         source='author',
         write_only=True
     )
-    description = serializers.CharField(max_length=300)
+    description = serializers.CharField(max_length=300, allow_blank=True, allow_null=True, required=False)
     number_of_vote = serializers.IntegerField(default=0)
     creation_date = serializers.DateTimeField(default=datetime.today())
     end_date = serializers.DateTimeField(allow_null=True)

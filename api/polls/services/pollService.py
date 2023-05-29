@@ -2,6 +2,8 @@ from uuid import uuid4
 from polls.jsonProcessors import PollSerializer, ShortUserSerializer, QuestionSerializer, OptionSerializer, \
     PollDeserializer, QuestionDeserializer, OptionDeserializer, AnswerDeserializer
 from polls.models import QuestionType, Option, Question, Poll, Answer
+from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class PollService:
@@ -25,34 +27,12 @@ class PollService:
         serialized_data['question_data'] = question_data
         return serialized_data
 
-    def get_all(self):
-        """
-        Gets all polls
-        """
-        polls = Poll.objects.all()
-        data = []
-        for poll in polls:
-            serialized_data = {"poll_data": PollSerializer(poll).data}
-            serialized_data["poll_data"]['author'] = ShortUserSerializer(poll.author).data
-            serialized_data["poll_data"]['responders'] = [ShortUserSerializer(responder).data for responder in
-                                                          poll.responders.all()]
-            question_data = []
-            for question in Question.objects.filter(poll=poll.id):
-                if question.question_type == QuestionType.OPEN_ANSWER.value:
-                    question_data += [{"question_info": QuestionSerializer(question).data}]
-                else:
-                    question_data += [{"question_info": QuestionSerializer(question).data,
-                                       "option_data": [OptionSerializer(option).data for option in
-                                                       Option.objects.filter(question=question.id)]}]
-            serialized_data['question_data'] = question_data
-            data.append(serialized_data)
-        return serialized_data
-
     def get_all_preview(self):
         """
         Gets all non-private polls preview
         """
-        polls = Poll.objects.filter(is_private=False).all()
+        current_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        polls = Poll.objects.filter(is_private=False, end_date__gte=current_date).all()
         data = []
         for poll in polls:
             data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data,
@@ -63,7 +43,19 @@ class PollService:
         """
         Gets all polls available for specific user
         """
-        polls = Poll.objects.filter(responders=id).all()
+        current_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        polls = Poll.objects.filter(responders=id, end_date__gte=current_date).all()
+        data = []
+        for poll in polls:
+            data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data,
+                         "endDate": poll.end_date})
+        return data
+
+    def get_user_polls(self, id):
+        """
+        Gets all polls available for specific user
+        """
+        polls = Poll.objects.filter(author=id).all()
         data = []
         for poll in polls:
             data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data,
@@ -75,7 +67,7 @@ class PollService:
         Creates a poll
         Returns error string or None if successful
         """
-        poll = PollDeserializer(poll_request_data)
+        poll = PollDeserializer(data=poll_request_data)
         if poll.is_valid():
             poll.validated_data["id"] = uuid4().hex
             if poll.validated_data["is_private"] and len(poll.validated_data["responders"]) < 1:
@@ -108,6 +100,8 @@ class PollService:
                 else:
                     return "invalid question"
             return None
+        else:
+            return poll.errors
         return "invalid poll"
 
     def get_statistics(self, poll_id, user_id):
@@ -116,19 +110,30 @@ class PollService:
         If no votes in poll, returns None
         """
         poll = Poll.objects.get(id=poll_id)
+        if not Answer.objects.filter(question=Question.objects.filter(poll=poll).first(), user_id=user_id):
+            return None
+
         serialized_data = {"poll_data": PollSerializer(poll).data}
         serialized_data["poll_data"]['author'] = ShortUserSerializer(poll.author).data
         serialized_data["poll_data"]['responders'] = [ShortUserSerializer(responder).data for responder in
                                                       poll.responders.all()]
-
         try:
             question_data = []
             for question in Question.objects.filter(poll=poll):
                 if question.question_type == QuestionType.OPEN_ANSWER.value:
-                    answer = Answer.objects.filter(question=question, user_id=user_id).get()
+                    # add all users open answers
+                    open_answer_data = []
+                    answers = list(Answer.objects.filter(question=question).all())
+                    # if not isinstance(answers, list):
+                    # answers = [answers]
+                    for answer in answers:
+                        if poll.is_anonymous:
+                            open_answer_data.append({"username": None, "answer": answer.open_answer})
+                        else:
+                            open_answer_data.append({"username": User.objects.filter(id=answer.user_id).get().username, "answer": answer.open_answer})
                     question_data.append({
                         "question_info": QuestionSerializer(question).data,
-                        "answer": answer.open_answer
+                        "option_data": open_answer_data
                     })
                 elif question.question_type == QuestionType.SINGLE_OPTION.value:
                     option_data = []
@@ -148,18 +153,20 @@ class PollService:
                         option_info = OptionSerializer(option).data
                         count_vote_current_option = 0
                         count_vote_all_option = 0
-                        answer = Answer.objects.get(question=question)
-                        for item in answer.multiple_options.all():
-                            count_vote_all_option += 1
-                            if item == option:
-                                count_vote_current_option += 1
+                        answers = Answer.objects.filter(question=question)
+                        for answer in answers:
+                            for item in answer.multiple_options.all():
+                                count_vote_all_option += 1
+                                if item == option:
+                                    count_vote_current_option += 1
                         option_info["votes_percent"] = round(100 * count_vote_current_option / count_vote_all_option)
                         option_data.append(option_info)
                     question_data.append({
                         "question_info": QuestionSerializer(question).data,
                         "option_data": option_data
                     })
-        except ZeroDivisionError:
+        except (ZeroDivisionError, ValueError) as e:
+            x = e
             return None
 
         serialized_data['question_data'] = question_data
@@ -213,6 +220,9 @@ class PollService:
                     return "invalid matching: option - question - answer"
 
         [answer.save() for answer in answers]
+        poll = Poll.objects.filter(id=poll_id).get()
+        poll.number_of_vote += 1
+        poll.save()
         return None
 
     def delete(self, id):

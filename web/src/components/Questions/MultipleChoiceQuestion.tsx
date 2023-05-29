@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import { QuestionAnswer } from "../../api/Polls/interfaces/polls";
 import { CustomQuestionProps } from "./interfaces";
 import BaseQuestion from "./BaseQuestion";
 
@@ -14,19 +15,27 @@ const MultipleChoiceQuestion = (props: CustomQuestionProps) => {
 
     const newSelectedOptions = isChecked
       ? [...selectedOptions, option]
-      : selectedOptions.filter((selectedOption) => selectedOption !== option);
+      : selectedOptions.filter(selectedOption => selectedOption !== option);
 
     setSelectedOptions(newSelectedOptions);
-    onStateChange(question.question_info.id, newSelectedOptions);
+    const answer: QuestionAnswer = {
+      user_id: 0,
+      question_id: question.question_info.id,
+      open_answer: null,
+      single_option_id: null,
+      multiple_options: newSelectedOptions,
+    };
+
+    onStateChange(answer);
   };
 
   return (
     <BaseQuestion title={question.question_info.title}>
       <StyledOptionsContainer>
-        {question.option_data?.map((option) => (
+        {question.option_data?.map(option => (
           <label key={option.id}>
             <input
-              type='checkbox'
+              type="checkbox"
               name={`question-${question.question_info.id}`}
               value={option.id}
               checked={selectedOptions.includes(option.id)}

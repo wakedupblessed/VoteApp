@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { X } from "react-bootstrap-icons";
 import styled from "styled-components";
 
-import { QuestionType } from "../../api/Polls/interfaces";
+import { QuestionType } from "../../api/Polls/interfaces/polls";
 import { StyledInput } from "../GlobalStyles";
 import { Checkbox } from "../CustomCheckBox/CheckBox";
 
@@ -10,6 +10,7 @@ interface OptionElementProps {
   placeholder?: string;
   value?: string;
   type: QuestionType.MultipleChoice | QuestionType.SingleChoice;
+  isReadonly: boolean;
   onChange?: (value: string) => void;
   onDelete?: () => void;
   handleFakeOption?: () => void;
@@ -20,6 +21,7 @@ const OptionElement = ({
   placeholder,
   value,
   type,
+  isReadonly,
   onChange,
   onDelete,
   handleFakeOption,
@@ -67,6 +69,7 @@ const OptionElement = ({
       <OptionInput
         placeholder={placeholder}
         value={localValue}
+        readOnly={isReadonly}
         onChange={handleLocalChange}
         onBlur={handleBlur}
         ref={inputRef}

@@ -28,5 +28,5 @@ def get_all_users(request):
     for user in User.objects.all():
         users.append(ShortUserSerializer(user).data)
     data = {}
-    data["users"] = [users]
+    data["users"] = users
     return Response(data, status=status.HTTP_200_OK)

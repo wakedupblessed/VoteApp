@@ -12,7 +12,12 @@ export const Header = () => {
     <HeaderArea>
       <NavLinkContainer>
         <CustomLink label='Home' route='/' />
-        {user && <CustomLink label='Create' route='/polls/create' />}
+        {user && (
+          <>
+            <CustomLink label='Create' route='/polls/create' />
+            <CustomLink label='Manage Polls' route='/polls/manage' />
+          </>
+        )}
       </NavLinkContainer>
       <NavAccountLinks>
         {user ? (
