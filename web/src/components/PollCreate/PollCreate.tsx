@@ -119,6 +119,10 @@ const PollCreate = () => {
         errors.push(`The question ${index} missing title`);
       }
 
+      if (!question.question_info.question_type) {
+        errors.push(`The question ${index} type is not defined`);
+      }
+
       if (
         question.question_info.question_type === "SingleChoice" ||
         question.question_info.question_type === "MultipleChoice"
