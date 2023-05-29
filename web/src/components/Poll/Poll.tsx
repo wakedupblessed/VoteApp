@@ -24,6 +24,7 @@ export const Poll = (poll: PollDTO) => {
         user.user_id,
         authTokens.access
       );
+      console.log(result);
 
       if (result) {
         setPollStatistic(result);
@@ -68,6 +69,7 @@ export const Poll = (poll: PollDTO) => {
                 <CustomLink label="Login" route="/login" />
               </LinkContainer>
             </NonBlurredContent>
+            <QuestionsContainer questions={question_data} />
           </>
         )}
       </FullTimeGradientContainer>

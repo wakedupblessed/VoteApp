@@ -110,6 +110,8 @@ export class PollApi {
     } catch (error) {
       console.error(error);
     }
+
+    return null;
   }
 
   static async deletePoll(id: string, token: string) {

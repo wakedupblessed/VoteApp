@@ -23,7 +23,7 @@ export const questionSlice = createSlice({
       const updatedQuestion = action.payload;
       const indexToUpdate = updatedQuestion.question_info.index;
 
-      state.questionsData = state.questionsData.map((question) => {
+      state.questionsData = state.questionsData.map(question => {
         if (question.question_info.index === indexToUpdate) {
           return {
             question_info: updatedQuestion.question_info,
@@ -36,14 +36,14 @@ export const questionSlice = createSlice({
 
     deleteQuestion: (state, action: PayloadAction<number>) => {
       state.questionsData = state.questionsData.filter(
-        (question) => question.question_info.index !== action.payload
+        question => question.question_info.index !== action.payload
       );
     },
 
     addQuestionOption: (state, action: PayloadAction<OptionUpsert>) => {
       const { questionIndex, title, optionIndex } = action.payload;
       const question = state.questionsData.find(
-        (q) => q.question_info.index === questionIndex
+        q => q.question_info.index === questionIndex
       );
       if (question) {
         question.option_data!.push({ questionIndex, title, optionIndex });
@@ -53,7 +53,7 @@ export const questionSlice = createSlice({
     updateQuestionOption: (state, action: PayloadAction<OptionUpsert>) => {
       const { questionIndex, optionIndex, title } = action.payload;
       const question = state.questionsData.find(
-        (q) => q.question_info.index === questionIndex
+        q => q.question_info.index === questionIndex
       );
       if (question && question.option_data![optionIndex]) {
         question.option_data![optionIndex].title = title;
@@ -63,11 +63,15 @@ export const questionSlice = createSlice({
     deleteQuestionOption: (state, action: PayloadAction<OptionDelete>) => {
       const { questionIndex, optionIndex } = action.payload;
       const question = state.questionsData.find(
-        (q) => q.question_info.index === questionIndex
+        q => q.question_info.index === questionIndex
       );
       if (question && question.option_data![optionIndex]) {
         question.option_data!.splice(optionIndex, 1);
       }
+    },
+
+    clear: state => {
+      state.questionsData = [];
     },
   },
 });
@@ -81,4 +85,5 @@ export const {
   addQuestionOption,
   updateQuestionOption,
   deleteQuestionOption,
+  clear,
 } = questionSlice.actions;
