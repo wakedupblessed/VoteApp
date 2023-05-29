@@ -161,11 +161,7 @@ export class PollApi {
       });
 
       if (response.status === 200) {
-        if (response.data) {
-          return response.data;
-        } else {
-          return null;
-        }
+        return response.data;
       }
     } catch (error) {}
 
