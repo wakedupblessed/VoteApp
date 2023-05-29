@@ -159,6 +159,7 @@ export class PollApi {
           Authorization: "Bearer " + token,
         },
       });
+
       if (response.status === 200) {
         return response.data;
       }
