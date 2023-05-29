@@ -2,6 +2,7 @@ from uuid import uuid4
 from polls.jsonProcessors import PollSerializer, ShortUserSerializer, QuestionSerializer, OptionSerializer, \
     PollDeserializer, QuestionDeserializer, OptionDeserializer, AnswerDeserializer
 from polls.models import QuestionType, Option, Question, Poll, Answer
+from django.contrib.auth.models import User
 
 
 class PollService:
@@ -127,19 +128,30 @@ class PollService:
         If no votes in poll, returns None
         """
         poll = Poll.objects.get(id=poll_id)
+        if not Answer.objects.filter(question=Question.objects.filter(poll=poll).first(), user_id=user_id):
+            return None
+
         serialized_data = {"poll_data": PollSerializer(poll).data}
         serialized_data["poll_data"]['author'] = ShortUserSerializer(poll.author).data
         serialized_data["poll_data"]['responders'] = [ShortUserSerializer(responder).data for responder in
                                                       poll.responders.all()]
-
         try:
             question_data = []
             for question in Question.objects.filter(poll=poll):
                 if question.question_type == QuestionType.OPEN_ANSWER.value:
-                    answer = Answer.objects.filter(question=question, user_id=user_id).get()
+                    # add all users open answers
+                    open_answer_data = []
+                    answers = list(Answer.objects.filter(question=question).all())
+                    # if not isinstance(answers, list):
+                    # answers = [answers]
+                    for answer in answers:
+                        if poll.is_anonymous:
+                            open_answer_data.append({"username": None, "answer": answer.open_answer})
+                        else:
+                            open_answer_data.append({"username": User.objects.filter(id=user_id).get().username, "answer": answer.open_answer})
                     question_data.append({
                         "question_info": QuestionSerializer(question).data,
-                        "answer": answer.open_answer
+                        "option_data": open_answer_data
                     })
                 elif question.question_type == QuestionType.SINGLE_OPTION.value:
                     option_data = []
@@ -170,7 +182,7 @@ class PollService:
                         "question_info": QuestionSerializer(question).data,
                         "option_data": option_data
                     })
-        except ZeroDivisionError:
+        except (ZeroDivisionError, ValueError):
             return None
 
         serialized_data['question_data'] = question_data
