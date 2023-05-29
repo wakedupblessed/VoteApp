@@ -3,6 +3,7 @@ from polls.jsonProcessors import PollSerializer, ShortUserSerializer, QuestionSe
     PollDeserializer, QuestionDeserializer, OptionDeserializer, AnswerDeserializer
 from polls.models import QuestionType, Option, Question, Poll, Answer
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class PollService:
@@ -26,34 +27,12 @@ class PollService:
         serialized_data['question_data'] = question_data
         return serialized_data
 
-    def get_all(self):
-        """
-        Gets all polls
-        """
-        polls = Poll.objects.all()
-        data = []
-        for poll in polls:
-            serialized_data = {"poll_data": PollSerializer(poll).data}
-            serialized_data["poll_data"]['author'] = ShortUserSerializer(poll.author).data
-            serialized_data["poll_data"]['responders'] = [ShortUserSerializer(responder).data for responder in
-                                                          poll.responders.all()]
-            question_data = []
-            for question in Question.objects.filter(poll=poll.id):
-                if question.question_type == QuestionType.OPEN_ANSWER.value:
-                    question_data += [{"question_info": QuestionSerializer(question).data}]
-                else:
-                    question_data += [{"question_info": QuestionSerializer(question).data,
-                                       "option_data": [OptionSerializer(option).data for option in
-                                                       Option.objects.filter(question=question.id)]}]
-            serialized_data['question_data'] = question_data
-            data.append(serialized_data)
-        return serialized_data
-
     def get_all_preview(self):
         """
         Gets all non-private polls preview
         """
-        polls = Poll.objects.filter(is_private=False).all()
+        current_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        polls = Poll.objects.filter(is_private=False, end_date__gte=current_date).all()
         data = []
         for poll in polls:
             data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data,
@@ -64,7 +43,8 @@ class PollService:
         """
         Gets all polls available for specific user
         """
-        polls = Poll.objects.filter(responders=id).all()
+        current_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        polls = Poll.objects.filter(responders=id, end_date__gte=current_date).all()
         data = []
         for poll in polls:
             data.append({"id": poll.id, "title": poll.title, "author": ShortUserSerializer(poll.author).data,
@@ -120,6 +100,8 @@ class PollService:
                 else:
                     return "invalid question"
             return None
+        else:
+            return poll.errors
         return "invalid poll"
 
     def get_statistics(self, poll_id, user_id):
@@ -171,18 +153,20 @@ class PollService:
                         option_info = OptionSerializer(option).data
                         count_vote_current_option = 0
                         count_vote_all_option = 0
-                        answer = Answer.objects.get(question=question)
-                        for item in answer.multiple_options.all():
-                            count_vote_all_option += 1
-                            if item == option:
-                                count_vote_current_option += 1
+                        answers = Answer.objects.filter(question=question)
+                        for answer in answers:
+                            for item in answer.multiple_options.all():
+                                count_vote_all_option += 1
+                                if item == option:
+                                    count_vote_current_option += 1
                         option_info["votes_percent"] = round(100 * count_vote_current_option / count_vote_all_option)
                         option_data.append(option_info)
                     question_data.append({
                         "question_info": QuestionSerializer(question).data,
                         "option_data": option_data
                     })
-        except (ZeroDivisionError, ValueError):
+        except (ZeroDivisionError, ValueError) as e:
+            x = e
             return None
 
         serialized_data['question_data'] = question_data

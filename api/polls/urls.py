@@ -1,9 +1,8 @@
-from .views import create, get, get_all, delete, vote, get_all_preview, get_all_available_preview, \
+from .views import create, get, delete, vote, get_all_preview, get_all_available_preview, \
     get_vote_statistic, get_user_polls
 from django.urls import path, re_path
 
 urlpatterns = [
-    path('', get_all),
     path('/create', create),
     path('/vote', vote),
     path('/delete', delete),

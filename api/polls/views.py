@@ -6,11 +6,6 @@ from .services.pollService import PollService
 
 
 @api_view(['GET'])
-def get_all(request):
-    return Response(PollService().get_all())
-
-
-@api_view(['GET'])
 def get_all_preview(request):
     return Response(PollService().get_all_preview())
 
